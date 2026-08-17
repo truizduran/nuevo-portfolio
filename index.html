@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tomas — Front-end Developer</title>
+
+<link rel="preconnect" href="https://api.fontshare.com">
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@700,600&f[]=general-sans@400,500,600&display=swap" rel="stylesheet">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="hero.css">
+
+<style>
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{ margin:0; background:#0a0a0a; color:#f2f2f2; font-family:'General Sans', sans-serif; }
+  .next-section{
+    min-height: 100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#0a0a0a;
+  }
+  .next-section span{ color:#8a8a8a; font-size:14px; letter-spacing:0.08em; text-transform:uppercase; }
+</style>
+
+<!-- ===== Estilos de la sección Proyectos (tarjetas apiladas) ===== -->
+<style>
+  :root{
+    --card-bg: #141414;
+    --border: rgba(255,255,255,0.08);
+    --text: #f2f2f2;
+    --text-dim: #8a8a8a;
+    --ghost-border: #D7E2EA;
+    --stack-offset: 24px;
+    --top-gap: 24px;
+    --bottom-gap: 40px;
+    --img-radius: 40px;
+  }
+
+  @media (min-width: 640px){ :root{ --img-radius: 50px; } }
+  @media (min-width: 768px){ :root{ --img-radius: 60px; } }
+
+  .display{ font-family: 'Clash Display', 'General Sans', sans-serif; }
+
+  .page-title{
+    text-align: center;
+    font-size: clamp(48px, 9vw, 96px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin: 0;
+    padding: 120px 20px 60px;
+    background: linear-gradient(180deg, #ffffff 0%, #7a7a7a 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-transform: uppercase;
+  }
+
+  .projects{
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px 200px;
+    position: relative;
+  }
+
+  @media (min-width: 1024px){ .projects{ max-width: 1080px; } }
+  @media (min-width: 1440px){ .projects{ max-width: 1180px; } }
+
+  .project{
+    position: sticky;
+    top: calc(var(--top-gap) + (var(--i) * var(--stack-offset)));
+    max-height: calc(100vh - (var(--top-gap) + (var(--i) * var(--stack-offset))) - var(--bottom-gap));
+    z-index: calc(var(--i) + 1);
+    margin-bottom: 56px;
+    opacity: 0;
+    transform: translateY(60px) scale(0.97);
+    transition: opacity 0.7s cubic-bezier(0.16,1,0.3,1), transform 0.7s cubic-bezier(0.16,1,0.3,1);
+  }
+
+  .project.is-visible{ opacity: 1; transform: translateY(0) scale(1); }
+
+  @media (prefers-reduced-motion: reduce){
+    .project{ transition: none; opacity: 1; transform: none; }
+  }
+
+  .project__frame{
+    background: var(--card-bg);
+    border: 2px solid rgba(215, 226, 234, 0.18);
+    border-radius: 44px;
+    padding: 28px;
+    max-height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+  }
+
+  .project__top{
+    display: flex;
+    align-items: flex-start;
+    gap: 18px;
+    margin-bottom: 22px;
+    flex: 0 0 auto;
+  }
+
+  .project__index{
+    font-family: 'Clash Display', sans-serif;
+    font-weight: 700;
+    font-size: clamp(40px, 6vw, 56px);
+    line-height: 1;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+
+  .project__info{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 6px;
+  }
+
+  .project__label{
+    font-family: 'General Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+  }
+
+  .project__name{
+    font-family: 'General Sans', sans-serif;
+    font-size: 19px;
+    font-weight: 500;
+    margin: 0;
+    color: var(--text);
+  }
+
+  .project__badge{
+    align-self: flex-start;
+    font-family: 'General Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ghost-border);
+    background: transparent;
+    border: 2px solid var(--ghost-border);
+    border-radius: 999px;
+    padding: 9px 20px;
+    white-space: nowrap;
+  }
+
+  .project__gallery{
+    display: grid;
+    grid-template-columns: 40% 60%;
+    gap: 12px;
+    align-items: stretch;
+    flex: 1 1 auto;
+    min-height: 0;
+  }
+
+  .project__col{
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-height: 0;
+  }
+
+  .project__img{
+    border-radius: var(--img-radius);
+    overflow: hidden;
+    background: #1c1c1c;
+  }
+
+  .project__img img{
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: cover;
+  }
+
+  /* Placeholders 100% CSS (sin red) — reemplazá por tus fotos cuando quieras */
+  .ph-verde{
+    background:
+      radial-gradient(circle at 25% 20%, rgba(255,255,255,0.14), transparent 55%),
+      linear-gradient(135deg, #1c2e1c 0%, #3c5c34 55%, #83a35c 100%);
+  }
+  .ph-violeta{
+    background:
+      radial-gradient(circle at 25% 20%, rgba(255,255,255,0.14), transparent 55%),
+      linear-gradient(135deg, #201530 0%, #4a3268 55%, #8a6bc2 100%);
+  }
+  .ph-dorado{
+    background:
+      radial-gradient(circle at 25% 20%, rgba(255,255,255,0.16), transparent 55%),
+      linear-gradient(135deg, #2e2410 0%, #6b4e18 55%, #d1a53a 100%);
+  }
+
+  .project__img--top{ flex: 1 1 clamp(130px, 16vw, 230px); min-height: 0; }
+  .project__img--bottom{ flex: 1 1 clamp(160px, 22vw, 340px); min-height: 0; }
+  .project__img--main{ height: 100%; }
+
+  @media (max-width: 640px){
+    .project__frame{ padding: 22px; border-radius: 36px; }
+  }
+
+  .end-spacer{ height: 40vh; }
+</style>
+</head>
+<body>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero-pin" data-hero-pin id="home">
+    <div class="hero-sticky">
+
+      <div class="hero-browser">
+        <!-- Barra superior estilo navegador (interpretación visual, sin branding) -->
+        <div class="hero-browser__topbar">
+          <div class="hero-browser__controls" aria-hidden="true">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="hero-browser__address" aria-hidden="true">
+            <div class="hero-browser__address-pill">
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="11" width="14" height="9" rx="2"/>
+                <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
+              </svg>
+              <span>mas.dev</span>
+            </div>
+          </div>
+          <button
+            type="button"
+            class="hero-browser__tabs-toggle"
+            aria-haspopup="dialog"
+            aria-expanded="false"
+            aria-controls="hero-tabs-overview"
+            aria-label="Ver secciones del portfolio">
+            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="12" height="12" rx="3"/>
+              <rect x="9" y="9" width="12" height="12" rx="3"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Área de contenido: video de fondo + placeholder de respaldo -->
+        <div class="hero-browser__content">
+          <!--
+            Cuando tengas el video definitivo, agregá el <source> acá.
+            Ejemplo: <source src="/media/hero-loop.mp4" type="video/mp4">
+            Si no hay fuente, el placeholder CSS queda visible automáticamente.
+          -->
+          <video
+            class="hero-browser__video"
+            muted
+            loop
+            autoplay
+            playsinline
+            preload="metadata"
+            aria-hidden="true">
+          </video>
+          <div class="hero-browser__placeholder" aria-hidden="true"></div>
+
+          <!--
+            Escena pixel art. Es la base de toda la animación del hero:
+            hero.js le agrega encima las capas de brillo y el canvas de
+            partículas, y usa esta misma imagen para pintar los 8 fragmentos.
+            Si el archivo no existe, el placeholder CSS de arriba queda visible.
+          -->
+          <img
+            class="hero-scene__img"
+            src="assets/arcade-night.png"
+            alt=""
+            decoding="async"
+            fetchpriority="high"
+            aria-hidden="true">
+        </div>
+      </div>
+
+      <div class="hero-copy">
+        <h1 class="hero-copy__title">Hi, I am Tomás</h1>
+        <p class="hero-copy__subtitle">[ FRONT-END DEVELOPER ]</p>
+      </div>
+
+      <!-- Capa de fragmentos (decorativa) -->
+      <div class="hero-fragments" aria-hidden="true">
+        <div class="hero-fragment"></div>
+        <div class="hero-fragment"></div>
+        <div class="hero-fragment"></div>
+        <div class="hero-fragment"></div>
+        <div class="hero-fragment"></div>
+        <div class="hero-fragment"></div>
+        <div class="hero-fragment"></div>
+        <div class="hero-fragment"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ Tab overview: las secciones como pestañas ============ -->
+  <div class="hero-tabs-overview" id="hero-tabs-overview" role="dialog" aria-modal="true" aria-label="Secciones del portfolio" hidden>
+    <button type="button" class="hero-tabs-overview__close" aria-label="Cerrar">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M18 6 6 18M6 6l12 12"/>
+      </svg>
+    </button>
+    <div class="hero-tabs-overview__grid">
+      <button type="button" class="hero-tab-card" data-target="#sobre-mi">
+        <span class="hero-tab-card__label">Sobre mí</span>
+      </button>
+      <button type="button" class="hero-tab-card" data-target="#proyectos">
+        <span class="hero-tab-card__label">Proyectos</span>
+      </button>
+      <button type="button" class="hero-tab-card" data-target="#contacto">
+        <span class="hero-tab-card__label">Contacto</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- ============ Siguientes secciones ============ -->
+  <section class="next-section" id="sobre-mi">
+    <span>Sección: Sobre mí</span>
+  </section>
+  <section id="proyectos">
+    <h1 class="page-title display">Proyectos</h1>
+    <div class="projects" id="projects"></div>
+    <div class="end-spacer"></div>
+  </section>
+  <section class="next-section" id="contacto">
+    <span>Sección: Contacto</span>
+  </section>
+
+  <script>
+    // ===== Lógica de la sección Proyectos (tarjetas apiladas) =====
+    // Reemplazá estos datos por tus proyectos reales.
+    // colorClass es el placeholder CSS (ph-verde / ph-violeta / ph-dorado) — sin red.
+    // Cuando tengas tus fotos, agregá "image: 'ruta/a/tu/foto.jpg'" a cada proyecto
+    // y el script va a usar <img> automáticamente en vez del color.
+    const PROJECTS_DATA = [
+      {
+        number: "01",
+        label: "Cliente",
+        name: "Nextlevel Studio",
+        badge: "Live Project",
+        colorClass: "ph-verde"
+      },
+      {
+        number: "02",
+        label: "Personal",
+        name: "Aura Brand Identity",
+        badge: "Live Project",
+        colorClass: "ph-violeta"
+      },
+      {
+        number: "03",
+        label: "Cliente",
+        name: "Solaris Digital",
+        badge: "Live Project",
+        colorClass: "ph-dorado"
+      }
+    ];
+
+    const projectsContainer = document.getElementById('projects');
+
+    PROJECTS_DATA.forEach((p, i) => {
+      const el = document.createElement('article');
+      el.className = 'project';
+      el.style.setProperty('--i', i);
+      el.innerHTML = `
+        <div class="project__frame">
+          <div class="project__top">
+            <span class="project__index display">${p.number}</span>
+            <div class="project__info">
+              <span class="project__label">${p.label}</span>
+              <h3 class="project__name">${p.name}</h3>
+            </div>
+            <span class="project__badge">${p.badge}</span>
+          </div>
+          <div class="project__gallery">
+            <div class="project__col">
+              <div class="project__img project__img--top ${p.colorClass}">${p.image ? `<img src="${p.image}" alt="${p.name}" loading="lazy">` : ''}</div>
+              <div class="project__img project__img--bottom ${p.colorClass}">${p.image ? `<img src="${p.image}" alt="${p.name}" loading="lazy">` : ''}</div>
+            </div>
+            <div class="project__img project__img--main ${p.colorClass}">${p.image ? `<img src="${p.image}" alt="${p.name}" loading="lazy">` : ''}</div>
+          </div>
+        </div>
+      `;
+      projectsContainer.appendChild(el);
+    });
+
+    const projectsObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting){
+          entry.target.classList.add('is-visible');
+          projectsObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
+
+    document.querySelectorAll('.project').forEach(card => projectsObserver.observe(card));
+  </script>
+
+  <script src="hero.js"></script>
+</body>
+</html>

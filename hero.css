@@ -1,0 +1,543 @@
+/* =========================================================
+   HERO SECTION — "Browser window" intro + scroll fragmentation
+   Requiere: hero.html (markup) + hero.js (lógica de scroll)
+   Fuentes: Clash Display (display) + General Sans (texto)
+   ========================================================= */
+
+:root{
+  --hero-bg: #060606;
+  --hero-chrome-bg: #101010;
+  --hero-border: rgba(255,255,255,0.08);
+  --hero-text: #f2f2f2;
+  --hero-text-dim: #8a8a8a;
+  --hero-shard-tint: rgba(215, 226, 234, 0.05);
+  --hero-shard-border: rgba(255,255,255,0.14);
+
+  /* Borde fino igual a las tarjetas, pero radio de ventana real (Safari) */
+  --hero-frame-border: rgba(215, 226, 234, 0.18);
+  --hero-frame-radius: 18px;
+  --hero-inset: clamp(12px, 2.5vw, 28px);
+}
+
+/* ---------- Contenedor de pin (da distancia de scroll para la animación) ---------- */
+.hero-pin{
+  position: relative;
+  height: 250vh; /* fallback */
+  height: 250dvh; /* distancia de scroll que dura la fragmentación */
+}
+
+.hero-pin.is-reduced-motion{
+  height: 100vh;
+  height: 100dvh; /* sin scroll extra: transición simple, sin pin */
+}
+
+.hero-sticky{
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 100vh; /* fallback */
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--hero-bg);
+}
+
+.hero-pin.is-reduced-motion .hero-sticky{
+  position: relative;
+}
+
+/* ---------- Ventana de navegador (capa base) ---------- */
+.hero-browser{
+  position: absolute;
+  top: var(--hero-inset);
+  right: var(--hero-inset);
+  bottom: var(--hero-inset);
+  left: var(--hero-inset);
+  display: flex;
+  flex-direction: column;
+  border: 2px solid var(--hero-frame-border);
+  border-radius: var(--hero-frame-radius);
+  overflow: hidden;
+  will-change: transform, opacity;
+}
+
+.hero-browser__topbar{
+  flex: 0 0 auto;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 0 20px;
+  background: var(--hero-chrome-bg);
+  border-bottom: 1px solid var(--hero-border);
+}
+
+.hero-browser__controls{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+
+.hero-browser__controls span{
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+/* Colores clásicos de semáforo (cerrar / minimizar / maximizar) */
+.hero-browser__controls span:nth-child(1){ background: #FF5F57; }
+.hero-browser__controls span:nth-child(2){ background: #FEBC2E; }
+.hero-browser__controls span:nth-child(3){ background: #28C840; }
+
+.hero-browser__address{
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.hero-browser__address-pill{
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 30px;
+  padding: 0 18px;
+  max-width: 340px;
+  width: 100%;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--hero-border);
+}
+
+.hero-browser__address-pill svg{
+  width: 11px;
+  height: 11px;
+  flex: 0 0 auto;
+  stroke: var(--hero-text-dim);
+}
+
+.hero-browser__address-pill span{
+  font-family: 'General Sans', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--hero-text-dim);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hero-browser__tabs-toggle{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  border: 1px solid var(--hero-border);
+  background: rgba(255,255,255,0.03);
+  color: var(--hero-text-dim);
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.hero-browser__tabs-toggle svg{
+  width: 15px;
+  height: 15px;
+  stroke: currentColor;
+}
+
+.hero-browser__tabs-toggle:hover,
+.hero-browser__tabs-toggle:focus-visible{
+  background: rgba(255,255,255,0.09);
+  border-color: rgba(255,255,255,0.22);
+  color: var(--hero-text);
+}
+
+.hero-browser__tabs-toggle:focus-visible{
+  outline: 2px solid rgba(255,255,255,0.5);
+  outline-offset: 2px;
+}
+
+.hero-browser__tabs-toggle[aria-expanded="true"]{
+  background: rgba(255,255,255,0.12);
+  color: var(--hero-text);
+}
+
+/* ---------- Área de contenido (video / placeholder) ---------- */
+.hero-browser__content{
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  background: var(--hero-bg);
+}
+
+.hero-browser__video,
+.hero-browser__placeholder{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero-browser__video{
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+.hero-browser__video.is-active{
+  opacity: 1;
+}
+
+.hero-browser__placeholder{
+  background:
+    linear-gradient(180deg, rgba(255,255,255,0.03), transparent 40%),
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 64px),
+    repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 64px),
+    radial-gradient(ellipse at 50% 30%, rgba(120,140,160,0.12), transparent 60%),
+    var(--hero-bg);
+  background-size: 100% 100%, 64px 64px, 64px 64px, 100% 100%, 100% 100%;
+  animation: heroGridDrift 60s linear infinite;
+}
+
+.hero-browser__placeholder.is-hidden{
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+
+@keyframes heroGridDrift{
+  from{ background-position: 0 0, 0 0, 0 0, 0 0, 0 0; }
+  to{ background-position: 0 0, 64px 64px, -64px 64px, 0 0, 0 0; }
+}
+
+/* =========================================================
+   ESCENA PIXEL ART "VIVA"
+   Tres capas dentro del área de contenido, todas apoyadas en
+   la MISMA imagen para no alterar ni un color del original:
+     1) .hero-scene__img  → la imagen, intacta.
+     2) .hero-glow        → recortes de esa imagen, aclarados
+        con brightness() y con la opacidad parpadeando. Al ser
+        la propia imagen, es imposible que aparezca un color
+        ajeno o un rectángulo desalineado.
+     3) .hero-scene__fx   → canvas con partículas de 1 "píxel
+        de arte" (luces del cielo, brillos del follaje, reflejos).
+   ========================================================= */
+/* hero.js le fija left/top/width/height en px: la imagen llena la ventana
+   entera (cover) conservando su proporción y centrada. */
+.hero-scene__img{
+  position: absolute;
+  image-rendering: pixelated;
+  opacity: 0;
+  transition: opacity 0.7s ease;
+}
+
+.hero-scene__img.is-ready{ opacity: 1; }
+
+.hero-glow{
+  position: absolute;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  filter: brightness(var(--glow-brightness, 1.35));
+  opacity: 0;
+}
+
+/* Pantallas y marquesinas: parpadeo eléctrico. steps(1) hace que salte
+   entre niveles en vez de interpolar — nada de degradados suaves. */
+.hero-glow--flicker{
+  animation: heroFlicker var(--glow-dur, 8s) steps(1, end) var(--glow-delay, 0s) infinite;
+}
+
+@keyframes heroFlicker{
+  0%, 100%{ opacity: 0; }
+  12%{ opacity: calc(var(--glow-max, 1) * 0.22); }
+  18%{ opacity: calc(var(--glow-max, 1) * 0.05); }
+  31%{ opacity: calc(var(--glow-max, 1) * 0.34); }
+  37%{ opacity: calc(var(--glow-max, 1) * 0.12); }
+  52%{ opacity: calc(var(--glow-max, 1) * 0.28); }
+  58%{ opacity: calc(var(--glow-max, 1) * 0.06); }
+  73%{ opacity: calc(var(--glow-max, 1) * 0.40); }
+  79%{ opacity: calc(var(--glow-max, 1) * 0.14); }
+  91%{ opacity: calc(var(--glow-max, 1) * 0.24); }
+}
+
+.hero-scene__fx{
+  position: absolute;
+  inset: 0;
+  image-rendering: pixelated;
+  pointer-events: none;
+}
+
+/* ---------- Copy central ---------- */
+/* ---------- Copy central ---------- */
+
+.hero-copy {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+  padding: 0 24px;
+  pointer-events: none;
+  will-change: transform, opacity;
+  z-index: 10;
+}
+
+.hero-copy__title {
+  font-family: 'Bungee', sans-serif;
+  font-weight: 400;
+  font-size: clamp(40px, 6.5vw, 104px);
+  line-height: 1;
+  letter-spacing: 0;
+  color: var(--hero-text);
+  margin: 0;
+  white-space: nowrap;
+        /*sombra muy sutil para separar */
+  text-shadow:
+    2px 2px 0 rgba(0, 0, 0, 0.55),
+    0 4px 12px rgba(0, 0, 0, 0.30);
+}
+
+.hero-copy__subtitle {
+  font-family: 'Space Mono', monospace;
+  font-weight: 400;
+  font-size: clamp(11px, 1.15vw, 17px);
+  line-height: 1;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--hero-text);
+  margin: 26px 0 0;
+  white-space: nowrap;
+
+  /* Misma lógica, pero todavía más discreta */
+  text-shadow:
+    1px 1px 0 rgba(0, 0, 0, 0.65),
+    0 2px 8px rgba(0, 0, 0, 0.35);
+}
+
+/* ---------- Tab overview: las secciones como pestañas de navegador ---------- */
+.hero-tabs-overview{
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(6, 6, 6, 0.8);
+  backdrop-filter: blur(28px);
+  -webkit-backdrop-filter: blur(28px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+
+.hero-tabs-overview.is-open{
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.hero-tabs-overview__close{
+  position: absolute;
+  top: clamp(16px, 3vw, 32px);
+  right: clamp(16px, 3vw, 32px);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid var(--hero-border);
+  color: var(--hero-text);
+  cursor: pointer;
+  padding: 0;
+}
+
+.hero-tabs-overview__close svg{
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+}
+
+.hero-tabs-overview__grid{
+  display: grid;
+  grid-template-columns: repeat(3, minmax(130px, 190px));
+  gap: 20px;
+  padding: 24px;
+  transform: scale(0.94);
+  transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+}
+
+.hero-tabs-overview.is-open .hero-tabs-overview__grid{
+  transform: scale(1);
+}
+
+.hero-tab-card{
+  aspect-ratio: 3 / 4;
+  display: flex;
+  flex-direction: column;
+  background: var(--hero-chrome-bg);
+  border: 2px solid var(--hero-frame-border);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  padding: 0;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.hero-tab-card:hover,
+.hero-tab-card:focus-visible{
+  transform: translateY(-4px);
+  border-color: rgba(255,255,255,0.34);
+}
+
+.hero-tab-card:focus-visible{
+  outline: 2px solid rgba(255,255,255,0.5);
+  outline-offset: 2px;
+}
+
+.hero-tab-card__label{
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+  font-family: 'Clash Display', 'General Sans', sans-serif;
+  font-weight: 600;
+  font-size: clamp(14px, 2.4vw, 17px);
+  color: var(--hero-text);
+}
+
+/* ---------- Capa de fragmentos (vidrio) ---------- */
+.hero-fragments{
+  position: absolute;
+  top: var(--hero-inset);
+  right: var(--hero-inset);
+  bottom: var(--hero-inset);
+  left: var(--hero-inset);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  pointer-events: none;
+}
+
+/* Cada fragmento tiene dos canales de visibilidad independientes:
+   --crack-a  → las grietas (solo el borde), que aparecen sobre la ventana
+                todavía intacta;
+   --slice-a  → la rebanada de imagen, que entra justo cuando la ventana
+                real se va. Como fragmentos y ventana ocupan el mismo
+                rectángulo, ese relevo no tiene salto visual. */
+.hero-fragment{
+  position: relative;
+  overflow: hidden;
+  /* El ancho de cada borde vive en una variable porque ::after tiene que
+     compensarlo: los pseudo-elementos se posicionan desde el padding box,
+     así que sin esta corrección la rebanada quedaría 1–2px corrida y el
+     relevo mostraría una costura. */
+  --bt: 1px; --br: 1px; --bb: 1px; --bl: 1px;
+  border-style: solid;
+  border-width: var(--bt) var(--br) var(--bb) var(--bl);
+  border-color: rgba(255, 255, 255, var(--crack-a, 0));
+  background: rgba(215, 226, 234, calc(0.05 * var(--slice-a, 0)));
+  will-change: transform;
+}
+
+/* Bordes exteriores: reponen el marco de la ventana a medida que ésta
+   desaparece, para que el marco también parezca partirse. */
+.hero-fragment[data-edge-top]{ --bt: 2px; border-top-color: rgba(215, 226, 234, calc(0.18 * var(--slice-a, 0))); }
+.hero-fragment[data-edge-right]{ --br: 2px; border-right-color: rgba(215, 226, 234, calc(0.18 * var(--slice-a, 0))); }
+.hero-fragment[data-edge-bottom]{ --bb: 2px; border-bottom-color: rgba(215, 226, 234, calc(0.18 * var(--slice-a, 0))); }
+.hero-fragment[data-edge-left]{ --bl: 2px; border-left-color: rgba(215, 226, 234, calc(0.18 * var(--slice-a, 0))); }
+
+.hero-fragment[data-corner="tl"]{ border-top-left-radius: var(--hero-frame-radius); }
+.hero-fragment[data-corner="tr"]{ border-top-right-radius: var(--hero-frame-radius); }
+.hero-fragment[data-corner="br"]{ border-bottom-right-radius: var(--hero-frame-radius); }
+.hero-fragment[data-corner="bl"]{ border-bottom-left-radius: var(--hero-frame-radius); }
+
+/* La rebanada. hero.js calcula --slice-size / --slice-pos en px para que
+   los 8 trozos reconstruyan la imagen exactamente como la ve la ventana. */
+.hero-fragment::after{
+  content: '';
+  position: absolute;
+  /* Insets negativos = el pseudo-elemento arranca en el borde exterior del
+     fragmento, que es el sistema de coordenadas con el que hero.js calcula
+     --slice-pos (offsetLeft/offsetTop). El borde se dibuja encima y hace
+     de grieta. */
+  inset: calc(-1 * var(--bt)) calc(-1 * var(--br)) calc(-1 * var(--bb)) calc(-1 * var(--bl));
+  background-image: var(--slice-img, none);
+  background-repeat: no-repeat;
+  background-size: var(--slice-size, auto);
+  background-position: var(--slice-pos, 0 0);
+  /* Como la imagen entra completa y no llena el ancho, las bandas que
+     sobran tienen que ser del mismo fondo que la ventana. */
+  background-color: var(--hero-bg);
+  image-rendering: pixelated;
+  opacity: var(--slice-a, 0);
+}
+
+/* La fila de arriba contiene la barra del navegador: ahí se recorta la
+   imagen y se repinta el chrome, así el trozo sigue leyéndose como
+   "pedazo de ventana" y no como "pedazo de foto". */
+.hero-fragment[data-top-row]::after{
+  /* +var(--bt) porque ::after ahora empieza en el borde exterior, no en el
+     padding box, y --content-top viene medido desde el borde exterior. */
+  clip-path: inset(calc(var(--content-top, 0px) + var(--bt)) 0 0 0);
+}
+
+.hero-fragment[data-top-row]::before{
+  content: '';
+  position: absolute;
+  inset: calc(-1 * var(--bt)) calc(-1 * var(--br)) auto calc(-1 * var(--bl));
+  height: calc(var(--content-top, 0px) + var(--bt));
+  background: var(--hero-chrome-bg);
+  border-bottom: 1px solid var(--hero-border);
+  opacity: var(--slice-a, 0);
+}
+
+/* ---------- Reduced motion: fallback simple ---------- */
+@media (prefers-reduced-motion: reduce){
+  .hero-browser, .hero-copy{ transition: opacity 0.5s ease; }
+  .hero-fragments{ display: none; }
+  .hero-browser__placeholder{ animation: none; }
+  .hero-tabs-overview,
+  .hero-tabs-overview__grid,
+  .hero-tab-card{ transition: none; }
+
+  /* La escena queda como la imagen original, quieta: sin parpadeos
+     y sin partículas. */
+  .hero-glow{ animation: none; opacity: 0; }
+  .hero-scene__fx{ display: none; }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 640px){
+  .hero-browser{ border-radius: 14px; }
+  .hero-browser__topbar{ height: 44px; padding: 0 14px; gap: 10px; }
+  .hero-browser__controls{ width: auto; gap: 6px; }
+  .hero-browser__controls span{ width: 8px; height: 8px; }
+  .hero-browser__tabs{ gap: 5px; }
+  .hero-browser__tab{ width: 24px; height: 24px; font-size: 10px; border-radius: 6px; }
+  .hero-browser__address-pill{ height: 26px; padding: 0 10px; max-width: 140px; }
+  .hero-browser__address-pill span{ font-size: 11px; }
+  .hero-copy__subtitle{ margin-top: 12px; }
+
+  .hero-tabs-overview__grid{
+    grid-template-columns: repeat(3, minmax(0, 110px));
+    gap: 10px;
+    padding: 16px;
+  }
+  .hero-tab-card__label{ font-size: 13px; }
+
+  /* Grid de fragmentos más simple en mobile: 2x4 en vez de 4x2 (menos ancho por pieza) */
+  .hero-fragments{
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+  }
+}
