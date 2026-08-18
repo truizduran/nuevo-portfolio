@@ -17,14 +17,6 @@
   *{ box-sizing: border-box; }
   html{ scroll-behavior: smooth; }
   body{ margin:0; background:#0a0a0a; color:#f2f2f2; font-family:'General Sans', sans-serif; }
-  .next-section{
-    min-height: 100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    background:#0a0a0a;
-  }
-  .next-section span{ color:#8a8a8a; font-size:14px; letter-spacing:0.08em; text-transform:uppercase; }
 
   /* ===== Barra de scroll =====
      Se aplica a toda la página y a cualquier panel que scrollee por dentro,
@@ -533,6 +525,129 @@
     .social:hover{ transform: none; }
   }
 </style>
+
+<!-- ===== Estilos de Sobre mí ===== -->
+<style>
+  .about{
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 130px 20px 60px;
+  }
+
+  @media (min-width: 1024px){ .about{ max-width: 1080px; } }
+
+  .about__grid{
+    display: grid;
+    gap: 40px;
+    align-items: center;
+  }
+
+  @media (min-width: 860px){
+    .about__grid{
+      grid-template-columns: minmax(280px, 460px) 1fr;
+      gap: 56px;
+    }
+  }
+
+  /* Hueco reservado para la foto. Mantiene la proporción tenga o no imagen,
+     así el layout no se mueve cuando la agregues. */
+  .about__photo{
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 20px;
+    overflow: hidden;
+    display: block;
+    object-fit: cover;
+  }
+
+  .about__photo--empty{
+    border: 1px dashed rgba(242, 181, 68, 0.35);
+    background:
+      repeating-linear-gradient(0deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 32px),
+      repeating-linear-gradient(90deg, rgba(255,255,255,0.02) 0 1px, transparent 1px 32px),
+      rgba(255,255,255,0.015);
+  }
+
+  .about__lead{
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(16px, 1.9vw, 21px);
+    line-height: 1.6;
+    color: var(--text);
+    margin: 0 0 20px;
+  }
+
+  .about__divider{
+    border: 0;
+    border-top: 1px dashed rgba(242, 181, 68, 0.5);
+    margin: 30px 0 26px;
+  }
+
+  .about__skills-title{
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(17px, 2vw, 21px);
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .about__skills{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .skill{
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid rgba(242, 181, 68, 0.45);
+    border-radius: 10px;
+    padding: 12px 18px;
+    font-family: 'Space Mono', monospace;
+    font-size: 15px;
+    color: var(--text);
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .skill:hover{
+    border-color: var(--accent);
+    background: rgba(242, 181, 68, 0.07);
+  }
+
+  /* El glifo ocupa siempre lo mismo, sea texto o SVG, para que las
+     etiquetas queden alineadas entre sí. */
+  .skill__icon{
+    width: 20px;
+    height: 20px;
+    flex: 0 0 auto;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 1;
+  }
+
+  .skill__icon svg{ width: 100%; height: 100%; }
+
+  @media (max-width: 640px){
+    .about{ padding-top: 100px; }
+    .skill{ padding: 10px 14px; font-size: 14px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .skill{ transition: none; }
+  }
+</style>
 </head>
 <body>
 
@@ -630,8 +745,73 @@
   </div>
 
   <!-- ============ Siguientes secciones ============ -->
-  <section class="next-section" id="sobre-mi">
-    <span>Sección: Sobre mí</span>
+  <section id="sobre-mi">
+    <div class="about">
+      <div class="about__grid">
+
+        <!--
+          Espacio reservado para tu foto.
+          Para usarla, reemplazá este div por:
+          <img class="about__photo" src="assets/tomas.jpg" alt="Tomás Ruiz Durán">
+          El hueco ya tiene la proporción final (1:1), así que al poner la
+          imagen el resto de la sección no se mueve.
+        -->
+        <div class="about__photo about__photo--empty" aria-hidden="true"></div>
+
+        <div class="about__content">
+          <p class="about__lead">Building responsive, interactive and accessible websites.</p>
+          <p class="about__lead">Always focused on details and performance.</p>
+
+          <hr class="about__divider">
+
+          <h2 class="about__skills-title">
+            <span class="skill__icon" aria-hidden="true">&lt;/&gt;</span>
+            Skills
+          </h2>
+
+          <ul class="about__skills">
+            <li class="skill">
+              <span class="skill__icon" aria-hidden="true">&lt;/&gt;</span>
+              HTML
+            </li>
+            <li class="skill">
+              <span class="skill__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 2h16l-1.5 17L12 22l-6.5-3L4 2zm12.5 5H9l.2 2.5h7.1l-.6 6.6-3.7 1.2-3.7-1.2-.25-2.8h2.1l.13 1.35 1.72.55 1.72-.55.2-2.1H8.1L7.5 5h9.2l-.2 2z"/></svg>
+              </span>
+              CSS
+            </li>
+            <li class="skill">
+              <span class="skill__icon" aria-hidden="true">JS</span>
+              JavaScript
+            </li>
+            <li class="skill">
+              <span class="skill__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                  <circle cx="6" cy="6" r="2.2"/><circle cx="6" cy="18" r="2.2"/><circle cx="18" cy="8" r="2.2"/>
+                  <path d="M6 8.2v7.6M18 10.2c0 3.2-3 4.2-5.4 4.6"/>
+                </svg>
+              </span>
+              Git
+            </li>
+            <li class="skill">
+              <span class="skill__icon" aria-hidden="true">B</span>
+              Bootstrap
+            </li>
+            <li class="skill">
+              <span class="skill__icon" aria-hidden="true">S</span>
+              Sass
+            </li>
+            <li class="skill">
+              <span class="skill__icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 6c-2.67 0-4.33 1.33-5 4 1-1.33 2.17-1.83 3.5-1.5.76.19 1.31.74 1.91 1.35.98 1 2.09 2.15 4.59 2.15 2.67 0 4.33-1.33 5-4-1 1.33-2.17 1.83-3.5 1.5-.76-.19-1.31-.74-1.91-1.35C15.61 7.15 14.5 6 12 6zm-5 6c-2.67 0-4.33 1.33-5 4 1-1.33 2.17-1.83 3.5-1.5.76.19 1.31.74 1.91 1.35.98 1 2.09 2.15 4.59 2.15 2.67 0 4.33-1.33 5-4-1 1.33-2.17 1.83-3.5 1.5-.76-.19-1.31-.74-1.91-1.35C10.61 13.15 9.5 12 7 12z"/></svg>
+              </span>
+              Tailwind CSS
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
   </section>
   <section id="proyectos">
     <h1 class="page-title display">Proyectos</h1>
