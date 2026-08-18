@@ -60,6 +60,10 @@
   will-change: transform, opacity;
 }
 
+/* Respaldo para navegadores sin soporte de inert: al menos no reciben clic.
+   hero.js marca la ventana como inerte cuando su opacidad llega a 0. */
+.hero-browser[inert]{ pointer-events: none; }
+
 .hero-browser__topbar{
   flex: 0 0 auto;
   height: 52px;

@@ -1,0 +1,15 @@
+# Dependencias (el proyecto no usa ninguna hoy; queda por si alguna vez
+# se añade un empaquetador o herramientas de build).
+node_modules/
+
+# Variables de entorno y secretos. Nunca deben llegar al repositorio.
+.env
+.env.local
+.env.*.local
+
+# Archivos generados por el sistema operativo.
+.DS_Store
+Thumbs.db
+
+# Configuración local del editor.
+.vscode/

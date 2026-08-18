@@ -585,9 +585,21 @@
       if (this.fragmentsLayer) this.fragmentsLayer.style.transform = transform;
 
       // La ventana real se apaga justo cuando entran los fragmentos.
-      this.browser.style.opacity = hasScene
+      const browserOpacity = hasScene
         ? 1 - smoothstep((progress - 0.18) / 0.12)
         : 1 - recedeT;
+      this.browser.style.opacity = browserOpacity;
+
+      // Apagada sigue ocupando su lugar: sin esto, el selector de idioma y el
+      // botón de pestañas seguirían recibiendo clic y foco de teclado sin
+      // verse. inert los saca del hit-testing, del orden de tabulación y del
+      // árbol de accesibilidad. No modifica ninguna propiedad visual ni el
+      // valor de opacity, que es exactamente el mismo de antes.
+      const apagada = browserOpacity < 0.05;
+      if (this.browserInerte !== apagada) {
+        this.browserInerte = apagada;
+        this.browser.inert = apagada;
+      }
 
       // --- Texto: se desvanece más rápido (~40%) y sube levemente ---
       const textT = smoothstep(progress / 0.4);

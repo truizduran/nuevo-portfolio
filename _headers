@@ -1,0 +1,37 @@
+# Cabeceras servidas por Netlify.
+# Netlify ya envía Strict-Transport-Security por su cuenta, así que no se repite acá.
+# Content-Security-Policy queda pendiente a propósito: hay estilos y scripts
+# inline en index.html y una CSP estricta los bloquearía.
+
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), camera=(), microphone=()
+
+# ---------------------------------------------------------------
+# Caché
+# ---------------------------------------------------------------
+# Los archivos no llevan hash en el nombre, así que una caché larga dejaría
+# a los visitantes con versiones viejas al reemplazar un archivo sin
+# renombrarlo. La política de abajo es conservadora a propósito.
+#
+# El HTML no se declara: conserva el valor por defecto de Netlify
+# (max-age=0, must-revalidate), de modo que cada visita ve la última versión.
+
+# Imágenes y GIF: una hora de vigencia y hasta un día sirviéndose desde la
+# caché mientras se revalida en segundo plano. Ahorra ~11 consultas por
+# visita repetida sin arriesgar más de un día de desfase.
+/assets/*
+  Cache-Control: public, max-age=3600, stale-while-revalidate=86400
+
+# CSS y JS quedan igual que hoy, revalidando siempre. Es deliberado:
+# hero.js depende de clases e IDs concretos de index.html. Si el HTML llegara
+# siempre fresco pero el JS viniera cacheado, un despliegue podría combinar
+# HTML nuevo con JS viejo y romper el hero. Con ETag la revalidación devuelve
+# un 304 de pocos bytes, así que el coste es mínimo.
+/hero.css
+  Cache-Control: public, max-age=0, must-revalidate
+
+/hero.js
+  Cache-Control: public, max-age=0, must-revalidate
