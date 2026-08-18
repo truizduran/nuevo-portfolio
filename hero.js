@@ -13,9 +13,9 @@
  *      real se desvanece y los paneles aparecen, el relevo es invisible:
  *      a partir de ahí lo que se separa "es" la ventana rota.
  *
- * Dentro de la ventana, HeroScene muestra la imagen pixel art completa
- * (sin recorte) y anima únicamente dos cosas: las máquinas y el árbol.
- * Todo lo demás de la escena queda quieto.
+ * Dentro de la ventana, HeroScene encaja la imagen pixel art en modo cover
+ * (llena el área sin deformarse) y anima únicamente dos cosas: las máquinas
+ * y el árbol. Todo lo demás de la escena queda quieto.
  */
 
 (function () {
@@ -42,20 +42,23 @@
    * (0–1). Cada una se recorta de la propia imagen y se aclara: nunca se
    * inyecta un color que no esté ya en el original.
    *
-   * Solo las máquinas: la farola, los charcos y el reflejo del agua quedan
-   * completamente quietos.
+   * Las máquinas y el foco de la farola. Los charcos y el reflejo del agua
+   * quedan completamente quietos.
    */
   const GLOW_REGIONS = [
-    // Marquesinas de las 4 máquinas
-    { x: 0.385, y: 0.405, w: 0.098, h: 0.050, dur: 6.7,  delay: -1.3, max: 1,    bright: 1.45 },
-    { x: 0.539, y: 0.405, w: 0.100, h: 0.050, dur: 9.1,  delay: -4.7, max: 0.95, bright: 1.45 },
-    { x: 0.683, y: 0.393, w: 0.108, h: 0.061, dur: 7.3,  delay: -0.4, max: 1,    bright: 1.45 },
-    { x: 0.845, y: 0.408, w: 0.102, h: 0.047, dur: 11.9, delay: -6.2, max: 0.9,  bright: 1.45 },
-    // Pantallas
-    { x: 0.390, y: 0.487, w: 0.062, h: 0.096, dur: 8.3,  delay: -2.9, max: 0.85, bright: 1.50 },
-    { x: 0.545, y: 0.487, w: 0.063, h: 0.096, dur: 5.9,  delay: -7.5, max: 0.80, bright: 1.50 },
-    { x: 0.690, y: 0.466, w: 0.086, h: 0.117, dur: 10.7, delay: -3.6, max: 0.85, bright: 1.50 },
-    { x: 0.847, y: 0.492, w: 0.060, h: 0.092, dur: 7.9,  delay: -5.1, max: 0.80, bright: 1.50 }
+    // Marquesinas de las 4 máquinas. Son las que más se notan, así que van
+    // con bright y max altos: el parpadeo tiene que leerse de lejos.
+    { x: 0.406, y: 0.429, w: 0.071, h: 0.045, dur: 6.7,  delay: -1.3, max: 1.60, bright: 1.90 },
+    { x: 0.520, y: 0.429, w: 0.068, h: 0.045, dur: 9.1,  delay: -4.7, max: 1.55, bright: 1.90 },
+    { x: 0.629, y: 0.426, w: 0.066, h: 0.048, dur: 7.3,  delay: -0.4, max: 1.60, bright: 1.90 },
+    { x: 0.738, y: 0.429, w: 0.068, h: 0.045, dur: 11.9, delay: -6.2, max: 1.50, bright: 1.90 },
+    // Pantallas: más contenidas, para que no compitan con las marquesinas.
+    { x: 0.411, y: 0.525, w: 0.043, h: 0.096, dur: 8.3,  delay: -2.9, max: 0.85, bright: 1.50 },
+    { x: 0.522, y: 0.501, w: 0.046, h: 0.119, dur: 5.9,  delay: -7.5, max: 0.80, bright: 1.50 },
+    { x: 0.631, y: 0.499, w: 0.053, h: 0.122, dur: 10.7, delay: -3.6, max: 0.85, bright: 1.50 },
+    { x: 0.741, y: 0.516, w: 0.045, h: 0.104, dur: 7.9,  delay: -5.1, max: 0.80, bright: 1.50 },
+    // Foco de la farola bajo el árbol: ciclo corto, como un tubo gastado.
+    { x: 0.253, y: 0.276, w: 0.068, h: 0.140, dur: 4.3,  delay: -1.9, max: 1.15, bright: 1.55 }
   ];
 
   /**
@@ -63,10 +66,11 @@
    * el cielo, las motas en suspensión y los reflejos del suelo se quitaron.
    */
   const TREE_CLUSTERS = [
-    { count: 7, x: 0.02, y: 0.02, w: 0.44, h: 0.14 }, // rama horizontal con hojas amarillas
-    { count: 5, x: 0.02, y: 0.04, w: 0.22, h: 0.26 }, // masa de follaje de la izquierda
-    { count: 5, x: 0.03, y: 0.28, w: 0.11, h: 0.50 }  // enredadera del tronco
+    { count: 18, x: 0.020, y: 0.02, w: 0.55, h: 0.16 }, // rama alta que cruza hacia la derecha
+    { count: 10, x: 0.000, y: 0.02, w: 0.28, h: 0.32 }, // masa de follaje de la izquierda
+    { count: 7,  x: 0.145, y: 0.30, w: 0.08, h: 0.52 }  // enredadera que baja por el tronco
   ];
+
 
   function clamp(value, min, max) {
     return Math.min(max, Math.max(min, value));
@@ -191,6 +195,12 @@
             s1: 0.10 + rnd() * 0.16, s2: 0.05 + rnd() * 0.09,
             p1: rnd() * 6.283, p2: rnd() * 6.283,
             max: 0.35 + rnd() * 0.35,
+            // amp = cuántos píxeles de arte recorre; sw/sh = tamaño del
+            // destello. Mezclar 1 y 2 hace que unos sean chispas y otros
+            // racimos de hoja, y el conjunto se lee como follaje agitándose.
+            amp: rnd() < 0.45 ? 2 : 1,
+            sw: rnd() < 0.35 ? 2 : 1,
+            sh: rnd() < 0.20 ? 2 : 1,
             sway: 0.05 + rnd() * 0.09, swayP: rnd() * 6.283
           });
         }
@@ -199,7 +209,7 @@
       return list;
     }
 
-    /** Encaja la imagen entera (contain) y coloca todas las capas. */
+    /** Encaja la imagen en modo cover y coloca todas las capas. */
     layout() {
       if (!this.ready || !this.content) return null;
 
@@ -285,6 +295,7 @@
 
       ctx.clearRect(0, 0, this.fxW, this.fxH);
 
+      // --- Destellos de las hojas que atrapan luz ---
       for (let i = 0; i < this.particles.length; i++) {
         const q = this.particles[i];
 
@@ -297,14 +308,17 @@
         a = Math.round(a * q.max * 5) / 5;
         if (a <= 0) continue;
 
-        // El vaivén de 1 píxel de arte es lo que se lee como brisa.
-        const sx = r.x + q.x * r.w + Math.sin(t * q.sway + q.swayP) * u;
-        const sy = r.y + q.y * r.h;
+        // Vaivén y cabeceo, ambos redondeados a píxeles de arte enteros:
+        // el destello salta de casilla en casilla, nunca se desliza.
+        const vaiven = Math.round(Math.sin(t * q.sway + q.swayP) * q.amp) * u;
+        const cabeceo = Math.round(Math.sin(t * q.sway * 0.7 + q.swayP * 1.6) * q.amp * 0.6) * u;
+        const sx = r.x + q.x * r.w + vaiven;
+        const sy = r.y + q.y * r.h + cabeceo;
 
         ctx.globalAlpha = a;
         ctx.fillStyle = q.c;
         // Se ancla a la rejilla del pixel art para que nada quede a medio píxel.
-        ctx.fillRect(Math.round(sx / u) * u, Math.round(sy / u) * u, u, u);
+        ctx.fillRect(Math.round(sx / u) * u, Math.round(sy / u) * u, q.sw * u, q.sh * u);
       }
 
       ctx.globalAlpha = 1;
@@ -328,8 +342,6 @@
       this.copy = root.querySelector('.hero-copy');
       this.fragmentsLayer = root.querySelector('.hero-fragments');
       this.fragments = Array.from(root.querySelectorAll('.hero-fragment'));
-      this.video = root.querySelector('.hero-browser__video');
-      this.placeholder = root.querySelector('.hero-browser__placeholder');
       this.tabsToggle = root.querySelector('.hero-browser__tabs-toggle');
       this.tabsOverview = document.getElementById(
         this.tabsToggle?.getAttribute('aria-controls') || 'hero-tabs-overview'
@@ -355,7 +367,6 @@
     }
 
     init() {
-      this.setupVideo();
       this.setupTabs();
       this.setupScene();
 
@@ -404,36 +415,6 @@
     isOnScreen() {
       const r = this.root.getBoundingClientRect();
       return r.bottom > 0 && r.top < window.innerHeight;
-    }
-
-    // --- Video: intenta reproducir; si falla o no hay fuente, deja el
-    // placeholder / la escena visibles (nunca se ve un ícono roto). ---
-    setupVideo() {
-      if (!this.video) return;
-
-      const hasSource = this.video.currentSrc || this.video.querySelector('source[src]');
-
-      if (!hasSource) {
-        this.video.setAttribute('aria-hidden', 'true');
-        return;
-      }
-
-      const showVideo = () => {
-        this.video.classList.add('is-active');
-        this.placeholder?.classList.add('is-hidden');
-      };
-
-      const keepPlaceholder = () => {
-        this.video.classList.remove('is-active');
-        this.placeholder?.classList.remove('is-hidden');
-      };
-
-      this.video
-        .play()
-        .then(showVideo)
-        .catch(keepPlaceholder);
-
-      this.video.addEventListener('error', keepPlaceholder);
     }
 
     // --- Tab overview: abre/cierra la vista de las secciones y navega
