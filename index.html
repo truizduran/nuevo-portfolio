@@ -223,6 +223,11 @@
     object-fit: cover;
   }
 
+  /* Para capturas donde lo importante no está centrado: se ve entera en vez
+     de recortarse. El fondo oscuro de la caja hace de marco. */
+  .project__img.is-contain{ background: var(--card-bg); }
+  .project__img.is-contain img{ object-fit: contain; }
+
   /* Placeholders 100% CSS (sin red) — reemplazá por tus fotos cuando quieras */
   .ph-verde{
     background:
@@ -261,7 +266,7 @@
      cederle alto al panel. Si el navegador no soporta :has(), la regla se
      ignora y todo queda como antes. */
   .project__col:has(.project__note) .project__img--top{
-    flex: 0 0 clamp(96px, 12vw, 160px);
+    flex: 0 0 clamp(120px, 14vw, 190px);
   }
 
   /* Centrado vertical con márgenes automáticos en vez de justify-content:
@@ -667,7 +672,7 @@
                 <rect x="5" y="11" width="14" height="9" rx="2"/>
                 <path d="M8 11V7a4 4 0 0 1 8 0v4"/>
               </svg>
-              <span>mas.dev</span>
+              <span>tomasruizduran.dev</span>
             </div>
           </div>
           <button
@@ -759,14 +764,14 @@
         <div class="about__photo about__photo--empty" aria-hidden="true"></div>
 
         <div class="about__content">
-          <p class="about__lead">Building responsive, interactive and accessible websites.</p>
-          <p class="about__lead">Always focused on details and performance.</p>
+          <p class="about__lead">Construyo sitios web responsivos, interactivos y accesibles.</p>
+          <p class="about__lead">Siempre atento a los detalles y al rendimiento.</p>
 
           <hr class="about__divider">
 
           <h2 class="about__skills-title">
             <span class="skill__icon" aria-hidden="true">&lt;/&gt;</span>
-            Skills
+            Habilidades
           </h2>
 
           <ul class="about__skills">
@@ -836,7 +841,7 @@
             </li>
             <li>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
-              <a href="mailto:truizd92@gmail.com">truizd92@gmail.com</a>
+              <a href="mailto:truizd.dev@gmail.com">truizd.dev@gmail.com</a>
             </li>
           </ul>
 
@@ -945,10 +950,25 @@
       },
       {
         number: "03",
-        label: "Cliente",
-        name: "Solaris Digital",
-        badge: "Live Project",
-        colorClass: "ph-dorado"
+        label: "Personal",
+        name: "Fútbol en Vivo Argentina",
+        badge: "GitHub Repo",
+        url: "https://github.com/truizduran/futbol-en-vivo-argentina",
+        colorClass: "ph-dorado",
+        // La grabación muestra el popup en la esquina derecha: con cover se
+        // recortaría justo esa zona, así que se muestra entera.
+        mainFit: "contain",
+        images: [
+          "assets/video-project.gif",
+          "assets/futbol-project.png"
+        ],
+        description: "Seguir a tu club favorito en vivo (goles, resultados) implica entrar a varias apps o webs distintas.",
+        details: [
+          { label: "Proceso", text: "Arranqué con la API de API-Football, pero el plan gratis bloqueaba la temporada actual; migré a la API pública no oficial de ESPN, documentada por la comunidad en r/Public-ESPN-API. Implementé Manifest V3 con chrome.storage, chrome.alarms y chrome.notifications para el aviso de gol en segundo plano." },
+          { label: "Solución", text: "Extensión con modo en vivo (marcador, minuto y eventos actualizándose cada 2 min) y modo resultados (próximo partido y resultados de la fecha cuando tu equipo no juega)." },
+          { label: "Resultado", text: "Código completo, documentado con README propio, instalable en modo desarrollador. Pendiente de publicación en la Chrome Web Store." },
+          { label: "Tecnologías", text: "JavaScript vainilla, Chrome Extension Manifest V3, API pública de ESPN" }
+        ]
       }
     ];
 
@@ -956,6 +976,13 @@
 
     // Devuelve el contenido de un hueco de la galería: una foto si hay,
     // o nada (y entonces se ve el degradado de la clase de color).
+    // El degradado de color es el relleno de cuando NO hay foto. Si la hay,
+    // no debe aplicarse: con object-fit: contain asomaría por los costados.
+    function fondo(proj, indice) {
+      const fotos = proj.images || (proj.image ? [proj.image] : []);
+      return (fotos[indice] || fotos[0]) ? '' : proj.colorClass;
+    }
+
     function slot(proj, indice) {
       const fotos = proj.images || (proj.image ? [proj.image] : []);
       const src = fotos[indice] || fotos[0];
@@ -990,7 +1017,7 @@
           </div>
           <div class="project__gallery">
             <div class="project__col">
-              <div class="project__img project__img--top ${p.colorClass}">${slot(p, 1)}</div>
+              <div class="project__img project__img--top ${fondo(p, 1)}">${slot(p, 1)}</div>
               ${p.description
                 ? '<div class="project__note">'
                     + '<p>' + p.description + '</p>'
@@ -998,9 +1025,9 @@
                         return '<p><span class="project__note-label">' + d.label + '</span>' + d.text + '</p>';
                       }).join('')
                   + '</div>'
-                : '<div class="project__img project__img--bottom ' + p.colorClass + '">' + slot(p, 2) + '</div>'}
+                : '<div class="project__img project__img--bottom ' + fondo(p, 2) + '">' + slot(p, 2) + '</div>'}
             </div>
-            <div class="project__img project__img--main ${p.colorClass}">${slot(p, 0)}</div>
+            <div class="project__img project__img--main ${p.mainFit === 'contain' ? 'is-contain' : ''} ${fondo(p, 0)}">${slot(p, 0)}</div>
           </div>
         </div>
       `;
@@ -1032,7 +1059,7 @@
     //                           un aviso de "enviado" sin salir de la página.
     //                           Pegá acá la URL que te da Formspree o Web3Forms.
     const FORM_ENDPOINT = '';
-    const CONTACT_EMAIL = 'truizd92@gmail.com';
+    const CONTACT_EMAIL = 'truizd.dev@gmail.com';
 
     const form = document.getElementById('contact-form');
     const status = document.getElementById('cf-status');
