@@ -25,6 +25,29 @@
     background:#0a0a0a;
   }
   .next-section span{ color:#8a8a8a; font-size:14px; letter-spacing:0.08em; text-transform:uppercase; }
+
+  /* ===== Barra de scroll =====
+     Se aplica a toda la página y a cualquier panel que scrollee por dentro,
+     como el texto de las tarjetas de proyecto. */
+
+  /* Firefox */
+  html{
+    scrollbar-width: thin;
+    scrollbar-color: #3d4a55 #080b0f;
+  }
+
+  /* Chrome, Edge, Brave, Safari */
+  ::-webkit-scrollbar{ width: 7px; height: 7px; }
+
+  ::-webkit-scrollbar-track{ background: #080b0f; }
+
+  ::-webkit-scrollbar-thumb{
+    background: #3d4a55;
+    border-radius: 999px;
+    border: 1px solid #080b0f;
+  }
+
+  ::-webkit-scrollbar-thumb:hover{ background: #657582; }
 </style>
 
 <!-- ===== Estilos de la sección Proyectos (tarjetas apiladas) ===== -->
@@ -155,9 +178,33 @@
     white-space: nowrap;
   }
 
+  .project__name a,
+  .project__link{
+    color: inherit;
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+  }
+
+  .project__name a:hover,
+  .project__link:hover{ border-bottom-color: var(--ghost-border); }
+
+  a.project__badge{
+    text-decoration: none;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  a.project__badge:hover{ background: var(--ghost-border); color: #0a0a0a; }
+
+  .project__link:focus-visible,
+  a.project__badge:focus-visible{
+    outline: 2px solid var(--ghost-border);
+    outline-offset: 3px;
+  }
+
   .project__gallery{
     display: grid;
-    grid-template-columns: 40% 60%;
+    grid-template-columns: 44% 56%;
     gap: 12px;
     align-items: stretch;
     flex: 1 1 auto;
@@ -199,6 +246,58 @@
     background:
       radial-gradient(circle at 25% 20%, rgba(255,255,255,0.16), transparent 55%),
       linear-gradient(135deg, #2e2410 0%, #6b4e18 55%, #d1a53a 100%);
+  }
+
+  /* Ocupa el mismo hueco que la foto que reemplaza, con idéntico flex,
+     para que la composición de la tarjeta no se mueva. */
+  .project__note{
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    /* Radio más contenido que el de las fotos: con 60px el texto chocaría
+       contra las esquinas. */
+    border-radius: 28px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.03);
+    padding: 20px 22px;
+  }
+
+  /* Solo en las tarjetas que tienen texto: la foto de arriba se achica para
+     cederle alto al panel. Si el navegador no soporta :has(), la regla se
+     ignora y todo queda como antes. */
+  .project__col:has(.project__note) .project__img--top{
+    flex: 0 0 clamp(96px, 12vw, 160px);
+  }
+
+  /* Centrado vertical con márgenes automáticos en vez de justify-content:
+     así, cuando el texto es más alto que el panel, no se recorta la primera
+     línea y se puede scrollear entero. */
+  .project__note > *:first-child{ margin-top: auto; }
+  .project__note > *:last-child{ margin-bottom: auto; }
+
+  .project__note p{
+    margin: 0;
+    font-size: 12.5px;
+    line-height: 1.5;
+    color: var(--text-dim);
+  }
+
+  .project__note-label{
+    display: block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 3px;
+  }
+
+  @media (max-width: 640px){
+    .project__note{ border-radius: 22px; padding: 20px 22px; }
+    .project__note p{ font-size: 12px; }
   }
 
   .project__img--top{ flex: 1 1 clamp(130px, 16vw, 230px); min-height: 0; }
@@ -628,16 +727,41 @@
       {
         number: "01",
         label: "Cliente",
-        name: "Nextlevel Studio",
+        name: "PPG Fotografía",
         badge: "Live Project",
-        colorClass: "ph-verde"
+        url: "https://truizduran.github.io/PPG-Fotografia-Ruiz-Duran",
+        colorClass: "ph-verde",
+        // Orden: [principal (derecha), arriba-izquierda]
+        images: [
+          "assets/ppg-inicio.jpg",
+          "assets/ppg-galeria.jpg"
+        ],
+        description: "Un fotógrafo profesional en Berlín, dedicado a proyectos personales y periodismo independiente, no tenía presencia online para mostrar su trabajo.",
+        details: [
+          { label: "Proceso", text: "Sitio multi-página en HTML/CSS/JS puro, con navegación entre secciones (Inicio, Sobre mí, Experiencia, Galería, Contacto) y enlaces a sus redes (Instagram, Flickr, LinkedIn)." },
+          { label: "Solución", text: "Historia personal, galería de fotos y formulario de contacto, para que clientes potenciales puedan ver su trabajo y escribirle directo." },
+          { label: "Resultado", text: "Publicado y en uso real por un cliente externo: no es un proyecto de práctica." },
+          { label: "Tecnologías", text: "HTML, CSS, JavaScript" }
+        ]
       },
       {
         number: "02",
         label: "Personal",
-        name: "Aura Brand Identity",
+        name: "Comparador de Precios de Juegos",
         badge: "Live Project",
-        colorClass: "ph-violeta"
+        url: "https://chromewebstore.google.com/detail/comparador-de-precios-de/dmanpibfpifgdlcondbhijjhkoopfkao",
+        colorClass: "ph-violeta",
+        images: [
+          "assets/comparador-tiendas.png",
+          "assets/comparador-buscador.png"
+        ],
+        description: "Buscar la mejor oferta de un juego implica abrir 10 pestañas de tiendas distintas.",
+        details: [
+          { label: "Proceso", text: "Extensión de navegador conectada a la API de CheapShark, con autocompletado de búsqueda y tema oscuro estilo Steam." },
+          { label: "Solución", text: "Popup donde buscás el juego y ves ofertas de todas las tiendas ordenadas por precio, con badges de descuento." },
+          { label: "Resultado", text: "Publicada y disponible para instalar en la Chrome Web Store." },
+          { label: "Tecnologías", text: "JavaScript, HTML/CSS, Chrome Extension API, CheapShark API" }
+        ]
       },
       {
         number: "03",
@@ -650,26 +774,53 @@
 
     const projectsContainer = document.getElementById('projects');
 
+    // Devuelve el contenido de un hueco de la galería: una foto si hay,
+    // o nada (y entonces se ve el degradado de la clase de color).
+    function slot(proj, indice) {
+      const fotos = proj.images || (proj.image ? [proj.image] : []);
+      const src = fotos[indice] || fotos[0];
+      if (!src) return '';
+      return '<img src="' + src + '" alt="' + proj.name + '" loading="lazy">';
+    }
+
     PROJECTS_DATA.forEach((p, i) => {
       const el = document.createElement('article');
       el.className = 'project';
       el.style.setProperty('--i', i);
+
+      // Con url la cápsula pasa a ser un enlace real; sin url queda como
+      // etiqueta, para no dejar un botón que no lleva a ningún lado.
+      const badge = p.url
+        ? '<a class="project__badge" href="' + p.url + '" target="_blank" rel="noopener noreferrer">' + p.badge + '</a>'
+        : '<span class="project__badge">' + p.badge + '</span>';
+
+      const titulo = p.url
+        ? '<a class="project__link" href="' + p.url + '" target="_blank" rel="noopener noreferrer">' + p.name + '</a>'
+        : p.name;
+
       el.innerHTML = `
         <div class="project__frame">
           <div class="project__top">
             <span class="project__index display">${p.number}</span>
             <div class="project__info">
               <span class="project__label">${p.label}</span>
-              <h3 class="project__name">${p.name}</h3>
+              <h3 class="project__name">${titulo}</h3>
             </div>
-            <span class="project__badge">${p.badge}</span>
+            ${badge}
           </div>
           <div class="project__gallery">
             <div class="project__col">
-              <div class="project__img project__img--top ${p.colorClass}">${p.image ? `<img src="${p.image}" alt="${p.name}" loading="lazy">` : ''}</div>
-              <div class="project__img project__img--bottom ${p.colorClass}">${p.image ? `<img src="${p.image}" alt="${p.name}" loading="lazy">` : ''}</div>
+              <div class="project__img project__img--top ${p.colorClass}">${slot(p, 1)}</div>
+              ${p.description
+                ? '<div class="project__note">'
+                    + '<p>' + p.description + '</p>'
+                    + (p.details || []).map(function (d) {
+                        return '<p><span class="project__note-label">' + d.label + '</span>' + d.text + '</p>';
+                      }).join('')
+                  + '</div>'
+                : '<div class="project__img project__img--bottom ' + p.colorClass + '">' + slot(p, 2) + '</div>'}
             </div>
-            <div class="project__img project__img--main ${p.colorClass}">${p.image ? `<img src="${p.image}" alt="${p.name}" loading="lazy">` : ''}</div>
+            <div class="project__img project__img--main ${p.colorClass}">${slot(p, 0)}</div>
           </div>
         </div>
       `;
