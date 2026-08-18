@@ -211,6 +211,229 @@
 
   .end-spacer{ height: 40vh; }
 </style>
+
+<!-- ===== Estilos de Contacto + footer ===== -->
+<style>
+  .visually-hidden{
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .contact{
+    max-width: 900px;
+    margin: 0 auto;
+    /* El padding de arriba reemplaza al que aportaba el título, ya quitado. */
+    padding: 130px 20px 140px;
+  }
+
+  @media (min-width: 1024px){ .contact{ max-width: 1080px; } }
+
+  /* Único color nuevo: el ámbar del hero (farola y marquesinas) y de los
+     iconos pixel art. Así el acento no aparece de la nada. */
+  :root{ --accent: #f2b544; }
+
+  .contact__grid{ display: grid; gap: 44px; }
+
+  @media (min-width: 900px){
+    .contact__grid{
+      grid-template-columns: minmax(250px, 340px) 1fr;
+      gap: 56px;
+    }
+    /* La columna se estira a lo alto de la fila, así la línea divisoria
+       acompaña al formulario completo. */
+    .contact__aside{
+      border-right: 1px solid var(--border);
+      padding-right: 48px;
+    }
+  }
+
+  .contact__aside{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .contact__title{
+    font-size: clamp(30px, 4vw, 42px);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin: 0;
+    color: var(--text);
+  }
+
+  .contact__accent{ color: var(--accent); }
+
+  .contact__rule{
+    width: 46px;
+    height: 3px;
+    background: var(--accent);
+    border: 0;
+    border-radius: 2px;
+    margin: 20px 0 24px;
+  }
+
+  .contact__text{
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--text-dim);
+    margin: 0 0 28px;
+  }
+
+  .contact__info{
+    list-style: none;
+    margin: 0 0 36px;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    font-size: 15px;
+    color: var(--text-dim);
+  }
+
+  .contact__info li{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .contact__info svg{
+    width: 16px;
+    height: 16px;
+    flex: 0 0 auto;
+    fill: var(--accent);
+  }
+
+  .contact__info a{
+    color: var(--text);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    transition: color 0.2s ease, border-color 0.2s ease;
+  }
+
+  .contact__info a:hover{ color: var(--accent); border-color: var(--accent); }
+
+  /* margin-top:auto ancla los iconos abajo de la columna, como en el diseño. */
+  .contact__social{
+    display: flex;
+    gap: 14px;
+    margin-top: auto;
+    padding-top: 8px;
+  }
+
+  /* Nombre y Email comparten fila; en pantallas chicas se apilan. */
+  .field-row{ display: grid; gap: 14px; }
+
+  @media (min-width: 560px){
+    .field-row{ grid-template-columns: 1fr 1fr; }
+  }
+
+  .field{ margin-bottom: 14px; }
+
+  .field__input{
+    width: 100%;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.14);
+    border-radius: 10px;
+    padding: 18px 20px;
+    color: var(--text);
+    font-family: 'General Sans', sans-serif;
+    font-size: 16px;
+    transition: border-color 0.2s ease, background 0.2s ease;
+  }
+
+  .field__input::placeholder{ color: var(--text-dim); }
+
+  .field__input:focus{
+    outline: none;
+    border-color: var(--ghost-border);
+    background: rgba(255,255,255,0.03);
+  }
+
+  .field__input--area{
+    resize: vertical;
+    min-height: 140px;
+    display: block;
+  }
+
+  /* Solo se marca en rojo después de intentar enviar, no mientras se escribe. */
+  .field__input.is-invalid{ border-color: #e06c6c; }
+
+  .contact-form__send{
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    font-family: 'General Sans', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ghost-border);
+    background: transparent;
+    border: 2px solid var(--ghost-border);
+    border-radius: 999px;
+    padding: 14px 30px;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease, opacity 0.2s ease;
+  }
+
+  .contact-form__send svg{
+    width: 15px; height: 15px;
+    fill: currentColor;
+  }
+
+  .contact-form__send:hover{ background: var(--ghost-border); color: #0a0a0a; }
+  .contact-form__send:focus-visible{ outline: 2px solid var(--ghost-border); outline-offset: 3px; }
+  .contact-form__send[disabled]{ opacity: 0.5; cursor: default; }
+
+  .contact-form__status{
+    min-height: 22px;
+    margin: 16px 0 0;
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+
+  .contact-form__status.is-error{ color: #e06c6c; }
+  .contact-form__status.is-ok{ color: #7fc99a; }
+
+  /* ---------- Footer ---------- */
+  .site-footer{
+    border-top: 1px solid var(--border);
+    padding: 56px 20px 44px;
+    text-align: center;
+  }
+
+  .social{
+    display: inline-flex;
+    border-radius: 12px;
+    transition: transform 0.2s ease, filter 0.2s ease;
+  }
+
+  .social img{
+    display: block;
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+  }
+
+  .social:hover{ transform: translateY(-3px); filter: brightness(1.15); }
+  .social:focus-visible{ outline: 2px solid var(--ghost-border); outline-offset: 4px; }
+
+  .site-footer__copy{
+    margin: 0;
+    font-size: 14px;
+    color: var(--text-dim);
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .social{ transition: none; }
+    .social:hover{ transform: none; }
+  }
+</style>
 </head>
 <body>
 
@@ -316,9 +539,84 @@
     <div class="projects" id="projects"></div>
     <div class="end-spacer"></div>
   </section>
-  <section class="next-section" id="contacto">
-    <span>Sección: Contacto</span>
+  <section id="contacto">
+    <div class="contact">
+      <div class="contact__grid">
+
+        <aside class="contact__aside">
+          <h3 class="contact__title display">Trabajemos <span class="contact__accent">juntos</span></h3>
+          <hr class="contact__rule">
+          <p class="contact__text">
+            ¿Tenés una pregunta, una idea de proyecto o simplemente querés
+            saludar? Me encantaría leerte.
+          </p>
+          <ul class="contact__info">
+            <li>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+              <span>Disponible para trabajo remoto</span>
+            </li>
+            <li>
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+              <a href="mailto:truizd92@gmail.com">truizd92@gmail.com</a>
+            </li>
+          </ul>
+
+          <nav class="contact__social" aria-label="Redes sociales">
+            <a class="social" href="https://github.com/truizduran"
+               target="_blank" rel="noopener noreferrer">
+              <img src="assets/github.png" alt="" width="52" height="52" loading="lazy">
+              <span class="visually-hidden">GitHub</span>
+            </a>
+            <!-- TODO: reemplazar por tu URL real de LinkedIn -->
+            <a class="social" href="https://www.linkedin.com/in/TU-USUARIO"
+               target="_blank" rel="noopener noreferrer">
+              <img src="assets/linkedin.png" alt="" width="52" height="52" loading="lazy">
+              <span class="visually-hidden">LinkedIn</span>
+            </a>
+          </nav>
+        </aside>
+
+      <form class="contact-form" id="contact-form" novalidate>
+        <div class="field field-row">
+          <div>
+            <label class="visually-hidden" for="cf-nombre">Nombre</label>
+            <input class="field__input" id="cf-nombre" name="nombre" type="text"
+                   placeholder="Nombre" autocomplete="name" required>
+          </div>
+          <div>
+            <label class="visually-hidden" for="cf-email">Email</label>
+            <input class="field__input" id="cf-email" name="email" type="email"
+                   placeholder="Email" autocomplete="email" required>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="visually-hidden" for="cf-asunto">Asunto</label>
+          <input class="field__input" id="cf-asunto" name="asunto" type="text"
+                 placeholder="Asunto" required>
+        </div>
+
+        <div class="field">
+          <label class="visually-hidden" for="cf-mensaje">Mensaje</label>
+          <textarea class="field__input field__input--area" id="cf-mensaje" name="mensaje"
+                    rows="5" placeholder="Mensaje" required></textarea>
+        </div>
+
+        <button class="contact-form__send" type="submit">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+          <span>Enviar mensaje</span>
+        </button>
+
+        <p class="contact-form__status" id="cf-status" role="status" aria-live="polite"></p>
+      </form>
+
+      </div>
+    </div>
   </section>
+
+  <footer class="site-footer">
+    <p class="site-footer__copy">© 2026 Tomás Ruiz Durán — Todos los derechos reservados</p>
+  </footer>
 
   <script>
     // ===== Lógica de la sección Proyectos (tarjetas apiladas) =====
@@ -388,6 +686,100 @@
     }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
 
     document.querySelectorAll('.project').forEach(card => projectsObserver.observe(card));
+  </script>
+
+  <script>
+    // ===== Formulario de contacto =====
+    // Una página estática no puede mandar mails por sí sola: necesita un
+    // servicio que reciba el POST. Hay dos modos:
+    //
+    //   FORM_ENDPOINT vacío  -> el botón abre tu cliente de correo con el
+    //                           mensaje ya redactado (funciona sin registrarse,
+    //                           pero depende de que el visitante tenga un
+    //                           cliente de mail configurado).
+    //   FORM_ENDPOINT con URL -> se envía en segundo plano y el visitante ve
+    //                           un aviso de "enviado" sin salir de la página.
+    //                           Pegá acá la URL que te da Formspree o Web3Forms.
+    const FORM_ENDPOINT = '';
+    const CONTACT_EMAIL = 'truizd92@gmail.com';
+
+    const form = document.getElementById('contact-form');
+    const status = document.getElementById('cf-status');
+    const submitBtn = form.querySelector('.contact-form__send');
+    const campos = Array.from(form.querySelectorAll('.field__input'));
+
+    function decir(texto, tipo) {
+      status.textContent = texto;
+      status.classList.toggle('is-error', tipo === 'error');
+      status.classList.toggle('is-ok', tipo === 'ok');
+    }
+
+    // La marca de error se limpia al corregir, para no dejar el campo en rojo
+    // mientras la persona ya lo está arreglando.
+    campos.forEach((campo) => {
+      campo.addEventListener('input', () => {
+        if (campo.checkValidity()) campo.classList.remove('is-invalid');
+      });
+    });
+
+    function enviarPorCorreo(datos) {
+      const cuerpo = 'Nombre: ' + datos.nombre + String.fromCharCode(10) +
+                     'Email: ' + datos.email + String.fromCharCode(10, 10) +
+                     datos.mensaje;
+      window.location.href = 'mailto:' + CONTACT_EMAIL +
+        '?subject=' + encodeURIComponent(datos.asunto) +
+        '&body=' + encodeURIComponent(cuerpo);
+      decir('Se abrió tu cliente de correo con el mensaje listo para enviar.', 'ok');
+    }
+
+    async function enviarAlServicio(datos) {
+      submitBtn.disabled = true;
+      decir('Enviando...');
+      try {
+        const res = await fetch(FORM_ENDPOINT, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: new FormData(form)
+        });
+        if (!res.ok) throw new Error('respuesta ' + res.status);
+        form.reset();
+        decir('¡Mensaje enviado! Te respondo a la brevedad.', 'ok');
+      } catch (err) {
+        decir('No se pudo enviar. Escribime directo a ' + CONTACT_EMAIL, 'error');
+      } finally {
+        submitBtn.disabled = false;
+      }
+    }
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // Validación propia para poder mostrar un mensaje en vez del globo del navegador.
+      let primerFallo = null;
+      campos.forEach((campo) => {
+        const ok = campo.checkValidity();
+        campo.classList.toggle('is-invalid', !ok);
+        if (!ok && !primerFallo) primerFallo = campo;
+      });
+
+      if (primerFallo) {
+        decir(primerFallo.type === 'email' && primerFallo.value
+          ? 'Revisá el email: parece que le falta algo.'
+          : 'Completá los campos que quedaron marcados.', 'error');
+        primerFallo.focus();
+        return;
+      }
+
+      const datos = {
+        nombre: form.nombre.value.trim(),
+        email: form.email.value.trim(),
+        asunto: form.asunto.value.trim(),
+        mensaje: form.mensaje.value.trim()
+      };
+
+      if (FORM_ENDPOINT) enviarAlServicio(datos);
+      else enviarPorCorreo(datos);
+    });
   </script>
 
   <script src="hero.js"></script>
