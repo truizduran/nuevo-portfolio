@@ -78,7 +78,7 @@
   .projects{
     max-width: 900px;
     margin: 0 auto;
-    padding: 0 20px 200px;
+    padding: 0 20px 90px;
     position: relative;
   }
 
@@ -358,7 +358,9 @@
     .end-spacer{ height: 0; }
   }
 
-  .end-spacer{ height: 40vh; }
+  /* Aire para que la última tarjeta se llegue a ver fija antes de soltarse.
+     Con 40vh el hueco hasta Contacto era enorme. */
+  .end-spacer{ height: 14vh; }
 </style>
 
 <!-- ===== Estilos de Contacto + footer ===== -->
@@ -376,7 +378,7 @@
     max-width: 900px;
     margin: 0 auto;
     /* El padding de arriba reemplaza al que aportaba el título, ya quitado. */
-    padding: 130px 20px 140px;
+    padding: 100px 20px 140px;
   }
 
   @media (min-width: 1024px){ .contact{ max-width: 1080px; } }
@@ -730,11 +732,20 @@
           </div>
           <button
             type="button"
+            class="hero-browser__lang"
+            id="lang-toggle"
+            aria-label="Change language to English">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.87 15.07l-2.54-2.51.03-.03c1.74-1.94 2.98-4.17 3.71-6.53H17V4h-7V2H8v2H1v1.99h11.17C11.5 7.92 10.44 9.75 9 11.35 8.07 10.32 7.3 9.19 6.69 8h-2c.73 1.63 1.73 3.17 2.98 4.56l-5.09 5.02L4 19l5-5 3.11 3.11.76-2.04zM18.5 10h-2L12 22h2l1.12-3h4.75L21 22h2l-4.5-12zm-2.62 7l1.62-4.33L19.12 17h-3.24z"/></svg>
+            <span class="hero-browser__lang-code" id="lang-code">EN</span>
+          </button>
+
+          <button
+            type="button"
             class="hero-browser__tabs-toggle"
             aria-haspopup="dialog"
             aria-expanded="false"
             aria-controls="hero-tabs-overview"
-            aria-label="Ver secciones del portfolio">
+            aria-label="Ver secciones del portfolio" data-i18n-aria="nav.aria">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
               <rect x="3" y="3" width="12" height="12" rx="3"/>
               <rect x="9" y="9" width="12" height="12" rx="3"/>
@@ -763,8 +774,8 @@
       </div>
 
       <div class="hero-copy">
-        <h1 class="hero-copy__title">Hi, I am Tomás</h1>
-        <p class="hero-copy__subtitle">[ FRONT-END DEVELOPER ]</p>
+        <h1 class="hero-copy__title" data-i18n="hero.title">Hola, soy Tomás</h1>
+        <p class="hero-copy__subtitle" data-i18n="hero.rol">[ DESARROLLADOR FRONT-END ]</p>
       </div>
 
       <!-- Capa de fragmentos (decorativa) -->
@@ -791,13 +802,13 @@
     </button>
     <div class="hero-tabs-overview__grid">
       <button type="button" class="hero-tab-card" data-target="#sobre-mi">
-        <span class="hero-tab-card__label">Sobre mí</span>
+        <span class="hero-tab-card__label" data-i18n="nav.about">Sobre mí</span>
       </button>
       <button type="button" class="hero-tab-card" data-target="#proyectos">
-        <span class="hero-tab-card__label">Proyectos</span>
+        <span class="hero-tab-card__label" data-i18n="nav.projects">Proyectos</span>
       </button>
       <button type="button" class="hero-tab-card" data-target="#contacto">
-        <span class="hero-tab-card__label">Contacto</span>
+        <span class="hero-tab-card__label" data-i18n="nav.contact">Contacto</span>
       </button>
     </div>
   </div>
@@ -817,14 +828,14 @@
         <div class="about__photo about__photo--empty" aria-hidden="true"></div>
 
         <div class="about__content">
-          <p class="about__lead">Construyo sitios web responsivos, interactivos y accesibles.</p>
-          <p class="about__lead">Siempre atento a los detalles y al rendimiento.</p>
+          <p class="about__lead" data-i18n="about.l1">Construyo sitios web responsivos, interactivos y accesibles.</p>
+          <p class="about__lead" data-i18n="about.l2">Siempre atento a los detalles y al rendimiento.</p>
 
           <hr class="about__divider">
 
           <h2 class="about__skills-title">
             <span class="skill__icon" aria-hidden="true">&lt;/&gt;</span>
-            Habilidades
+            <span data-i18n="about.skills">Habilidades</span>
           </h2>
 
           <ul class="about__skills">
@@ -872,7 +883,7 @@
     </div>
   </section>
   <section id="proyectos">
-    <h1 class="page-title display">Proyectos</h1>
+    <h1 class="page-title display" data-i18n="nav.projects">Proyectos</h1>
     <div class="projects" id="projects"></div>
     <div class="end-spacer"></div>
   </section>
@@ -881,16 +892,13 @@
       <div class="contact__grid">
 
         <aside class="contact__aside">
-          <h3 class="contact__title display">Trabajemos <span class="contact__accent">juntos</span></h3>
+          <h3 class="contact__title display"><span data-i18n="contact.title">Trabajemos</span> <span class="contact__accent" data-i18n="contact.titleAccent">juntos</span></h3>
           <hr class="contact__rule">
-          <p class="contact__text">
-            ¿Tenés una pregunta, una idea de proyecto o simplemente querés
-            saludar? Me encantaría leerte.
-          </p>
+          <p class="contact__text" data-i18n="contact.text">¿Tenés una pregunta, una idea de proyecto o simplemente querés saludar? Me encantaría leerte.</p>
           <ul class="contact__info">
             <li>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-              <span>Disponible para trabajo remoto</span>
+              <span data-i18n="contact.remote">Disponible para trabajo remoto</span>
             </li>
             <li>
               <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
@@ -931,30 +939,30 @@
           <div>
             <label class="visually-hidden" for="cf-nombre">Nombre</label>
             <input class="field__input" id="cf-nombre" name="nombre" type="text"
-                   placeholder="Nombre" autocomplete="name" required>
+                   placeholder="Nombre" data-i18n-ph="form.name" autocomplete="name" required>
           </div>
           <div>
             <label class="visually-hidden" for="cf-email">Email</label>
             <input class="field__input" id="cf-email" name="email" type="email"
-                   placeholder="Email" autocomplete="email" required>
+                   placeholder="Email" data-i18n-ph="form.email" autocomplete="email" required>
           </div>
         </div>
 
         <div class="field">
           <label class="visually-hidden" for="cf-asunto">Asunto</label>
           <input class="field__input" id="cf-asunto" name="asunto" type="text"
-                 placeholder="Asunto" required>
+                 placeholder="Asunto" data-i18n-ph="form.subject" required>
         </div>
 
         <div class="field">
           <label class="visually-hidden" for="cf-mensaje">Mensaje</label>
           <textarea class="field__input field__input--area" id="cf-mensaje" name="mensaje"
-                    rows="5" placeholder="Mensaje" required></textarea>
+                    rows="5" placeholder="Mensaje" data-i18n-ph="form.message" required></textarea>
         </div>
 
         <button class="contact-form__send" type="submit">
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
-          <span>Enviar mensaje</span>
+          <span data-i18n="form.send">Enviar mensaje</span>
         </button>
 
         <p class="contact-form__status" id="cf-status" role="status" aria-live="polite"></p>
@@ -965,8 +973,115 @@
   </section>
 
   <footer class="site-footer">
-    <p class="site-footer__copy">© 2026 Tomás Ruiz Durán — Todos los derechos reservados</p>
+    <p class="site-footer__copy">© 2026 Tomás Ruiz Durán — <span data-i18n="footer.rights">Todos los derechos reservados</span></p>
   </footer>
+
+  <script>
+    // ===== Idioma =====
+    // El idioma inicial sale del navegador; si la persona toca el botón, esa
+    // elección se guarda y manda por encima de la detección automática.
+    const I18N = {
+      es: {
+        'hero.title': 'Hola, soy Tomás',
+        'hero.rol': '[ DESARROLLADOR FRONT-END ]',
+        'nav.about': 'Sobre mí',
+        'nav.projects': 'Proyectos',
+        'nav.contact': 'Contacto',
+        'nav.aria': 'Ver secciones del portfolio',
+        'about.l1': 'Construyo sitios web responsivos, interactivos y accesibles.',
+        'about.l2': 'Siempre atento a los detalles y al rendimiento.',
+        'about.skills': 'Habilidades',
+        'contact.title': 'Trabajemos',
+        'contact.titleAccent': 'juntos',
+        'contact.text': '¿Tenés una pregunta, una idea de proyecto o simplemente querés saludar? Me encantaría leerte.',
+        'contact.remote': 'Disponible para trabajo remoto',
+        'form.name': 'Nombre',
+        'form.email': 'Email',
+        'form.subject': 'Asunto',
+        'form.message': 'Mensaje',
+        'form.send': 'Enviar mensaje',
+        'form.sending': 'Enviando...',
+        'form.ok': '¡Mensaje enviado! Te respondo a la brevedad.',
+        'form.fail': 'No se pudo enviar. Escribime directo a ',
+        'form.badEmail': 'Revisá el email: parece que le falta algo.',
+        'form.incomplete': 'Completá los campos que quedaron marcados.',
+        'footer.rights': 'Todos los derechos reservados',
+        'lang.switch': 'Change language to English'
+      },
+      en: {
+        'hero.title': 'Hi, I am Tomás',
+        'hero.rol': '[ FRONT-END DEVELOPER ]',
+        'nav.about': 'About',
+        'nav.projects': 'Projects',
+        'nav.contact': 'Contact',
+        'nav.aria': 'View portfolio sections',
+        'about.l1': 'Building responsive, interactive and accessible websites.',
+        'about.l2': 'Always focused on details and performance.',
+        'about.skills': 'Skills',
+        'contact.title': 'Let us work',
+        'contact.titleAccent': 'together',
+        'contact.text': 'Got a question, a project idea or just want to say hi? I would love to hear from you.',
+        'contact.remote': 'Available for remote work',
+        'form.name': 'Name',
+        'form.email': 'Email',
+        'form.subject': 'Subject',
+        'form.message': 'Message',
+        'form.send': 'Send message',
+        'form.sending': 'Sending...',
+        'form.ok': 'Message sent! I will get back to you shortly.',
+        'form.fail': 'Could not send. Write me directly at ',
+        'form.badEmail': 'Check the email address, something seems off.',
+        'form.incomplete': 'Please fill in the highlighted fields.',
+        'footer.rights': 'All rights reserved',
+        'lang.switch': 'Cambiar idioma a español'
+      }
+    };
+
+    const GUARDADO = 'idioma';
+
+    function idiomaInicial() {
+      const elegido = localStorage.getItem(GUARDADO);
+      if (elegido === 'es' || elegido === 'en') return elegido;
+      // navigator.languages respeta el orden de preferencia del navegador.
+      const pref = (navigator.languages && navigator.languages[0]) || navigator.language || 'es';
+      return pref.toLowerCase().startsWith('es') ? 'es' : 'en';
+    }
+
+    let idioma = idiomaInicial();
+
+    function t(clave) {
+      return (I18N[idioma] && I18N[idioma][clave]) || I18N.es[clave] || '';
+    }
+
+    function aplicarIdioma() {
+      document.documentElement.lang = idioma;
+
+      document.querySelectorAll('[data-i18n]').forEach((el) => {
+        el.textContent = t(el.dataset.i18n);
+      });
+      document.querySelectorAll('[data-i18n-ph]').forEach((el) => {
+        el.placeholder = t(el.dataset.i18nPh);
+      });
+      document.querySelectorAll('[data-i18n-aria]').forEach((el) => {
+        el.setAttribute('aria-label', t(el.dataset.i18nAria));
+      });
+
+      const btn = document.getElementById('lang-toggle');
+      if (btn) {
+        btn.setAttribute('aria-label', t('lang.switch'));
+        document.getElementById('lang-code').textContent = idioma === 'es' ? 'EN' : 'ES';
+      }
+
+      // Las tarjetas se generan por JS, así que se repintan con el idioma nuevo.
+      if (typeof pintarProyectos === 'function') pintarProyectos();
+    }
+
+    document.getElementById('lang-toggle').addEventListener('click', () => {
+      idioma = idioma === 'es' ? 'en' : 'es';
+      localStorage.setItem(GUARDADO, idioma);
+      aplicarIdioma();
+    });
+  </script>
 
   <script>
     // ===== Lógica de la sección Proyectos (tarjetas apiladas) =====
@@ -993,7 +1108,19 @@
           { label: "Solución", text: "Historia personal, galería de fotos y formulario de contacto, para que clientes potenciales puedan ver su trabajo y escribirle directo." },
           { label: "Resultado", text: "Publicado y en uso real por un cliente externo: no es un proyecto de práctica." },
           { label: "Tecnologías", text: "HTML, CSS, JavaScript" }
-        ]
+        ],
+        // Solo los campos que cambian con el idioma. El resto (fotos, url,
+        // número) es el mismo en los dos.
+        en: {
+          label: "Client",
+          description: "A professional photographer in Berlin, focused on personal projects and independent journalism, had no online presence to show his work.",
+          details: [
+            { label: "Process", text: "Multi-page site in plain HTML/CSS/JS, with navigation between sections (Home, About, Experience, Gallery, Contact) and links to his social profiles (Instagram, Flickr, LinkedIn)." },
+            { label: "Solution", text: "Personal story, photo gallery and contact form, so potential clients can see his work and write to him directly." },
+            { label: "Result", text: "Published and in real use by an external client: not a practice project." },
+            { label: "Technologies", text: "HTML, CSS, JavaScript" }
+          ]
+        }
       },
       {
         number: "02",
@@ -1012,7 +1139,17 @@
           { label: "Solución", text: "Popup donde buscás el juego y ves ofertas de todas las tiendas ordenadas por precio, con badges de descuento." },
           { label: "Resultado", text: "Publicada y disponible para instalar en la Chrome Web Store." },
           { label: "Tecnologías", text: "JavaScript, HTML/CSS, Chrome Extension API, CheapShark API" }
-        ]
+        ],
+        en: {
+          label: "Personal",
+          description: "Finding the best deal on a game means opening 10 different store tabs.",
+          details: [
+            { label: "Process", text: "Browser extension connected to the CheapShark API, with search autocomplete and a Steam-style dark theme." },
+            { label: "Solution", text: "A popup where you search for a game and see deals from every store sorted by price, with discount badges." },
+            { label: "Result", text: "Published and available to install on the Chrome Web Store." },
+            { label: "Technologies", text: "JavaScript, HTML/CSS, Chrome Extension API, CheapShark API" }
+          ]
+        }
       },
       {
         number: "03",
@@ -1034,7 +1171,17 @@
           { label: "Solución", text: "Extensión con modo en vivo (marcador, minuto y eventos actualizándose cada 2 min) y modo resultados (próximo partido y resultados de la fecha cuando tu equipo no juega)." },
           { label: "Resultado", text: "Código completo, documentado con README propio, instalable en modo desarrollador. Pendiente de publicación en la Chrome Web Store." },
           { label: "Tecnologías", text: "JavaScript vainilla, Chrome Extension Manifest V3, API pública de ESPN" }
-        ]
+        ],
+        en: {
+          label: "Personal",
+          description: "Following your favourite club live (goals, results) means jumping between several apps and websites.",
+          details: [
+            { label: "Process", text: "Started with the API-Football API, but the free plan blocked the current season; migrated to the unofficial public ESPN API, documented by the community at r/Public-ESPN-API. Built on Manifest V3 with chrome.storage, chrome.alarms and chrome.notifications for background goal alerts." },
+            { label: "Solution", text: "Extension with a live mode (score, minute and events refreshing every 2 min) and a results mode (next fixture and matchday results when your team is not playing)." },
+            { label: "Result", text: "Complete code, documented with its own README, installable in developer mode. Pending publication on the Chrome Web Store." },
+            { label: "Technologies", text: "Vanilla JavaScript, Chrome Extension Manifest V3, public ESPN API" }
+          ]
+        }
       }
     ];
 
@@ -1056,7 +1203,24 @@
       return '<img src="' + src + '" alt="' + proj.name + '" loading="lazy">';
     }
 
-    PROJECTS_DATA.forEach((p, i) => {
+    // Devuelve el proyecto con los campos del idioma activo encima. Si no hay
+    // traducción para ese idioma, se cae al español sin romper nada.
+    function traducido(proj) {
+      return (typeof idioma !== 'undefined' && idioma === 'en' && proj.en)
+        ? Object.assign({}, proj, proj.en)
+        : proj;
+    }
+
+    let observadorProyectos = null;
+
+    function pintarProyectos() {
+      // Si ya había tarjetas, se descartan: es un repintado por cambio de idioma.
+      const repintado = projectsContainer.childElementCount > 0;
+      if (observadorProyectos) observadorProyectos.disconnect();
+      projectsContainer.innerHTML = '';
+
+      PROJECTS_DATA.forEach((proyecto, i) => {
+      const p = traducido(proyecto);
       const el = document.createElement('article');
       el.className = 'project';
       el.style.setProperty('--i', i);
@@ -1098,18 +1262,31 @@
         </div>
       `;
       projectsContainer.appendChild(el);
-    });
-
-    const projectsObserver = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting){
-          entry.target.classList.add('is-visible');
-          projectsObserver.unobserve(entry.target);
-        }
       });
-    }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
 
-    document.querySelectorAll('.project').forEach(card => projectsObserver.observe(card));
+      // Al repintar por idioma las tarjetas ya se vieron: se muestran de una,
+      // sin repetir la animación de entrada.
+      if (repintado) {
+        projectsContainer.querySelectorAll('.project')
+          .forEach((card) => card.classList.add('is-visible'));
+        return;
+      }
+
+      observadorProyectos = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting){
+            entry.target.classList.add('is-visible');
+            observadorProyectos.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15, rootMargin: '0px 0px -10% 0px' });
+
+      projectsContainer.querySelectorAll('.project')
+        .forEach(card => observadorProyectos.observe(card));
+    }
+
+    // Primer pintado y aplicación del idioma detectado.
+    aplicarIdioma();
   </script>
 
   <script>
@@ -1143,7 +1320,7 @@
 
     async function enviar() {
       submitBtn.disabled = true;
-      decir('Enviando...');
+      decir(t('form.sending'));
       try {
         const res = await fetch('/', {
           method: 'POST',
@@ -1152,9 +1329,9 @@
         });
         if (!res.ok) throw new Error('respuesta ' + res.status);
         form.reset();
-        decir('¡Mensaje enviado! Te respondo a la brevedad.', 'ok');
+        decir(t('form.ok'), 'ok');
       } catch (err) {
-        decir('No se pudo enviar. Escribime directo a ' + CONTACT_EMAIL, 'error');
+        decir(t('form.fail') + CONTACT_EMAIL, 'error');
       } finally {
         submitBtn.disabled = false;
       }
@@ -1173,8 +1350,8 @@
 
       if (primerFallo) {
         decir(primerFallo.type === 'email' && primerFallo.value
-          ? 'Revisá el email: parece que le falta algo.'
-          : 'Completá los campos que quedaron marcados.', 'error');
+          ? t('form.badEmail')
+          : t('form.incomplete'), 'error');
         primerFallo.focus();
         return;
       }

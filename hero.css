@@ -125,6 +125,44 @@
   text-overflow: ellipsis;
 }
 
+/* Selector de idioma. Comparte el aspecto del botón de pestañas para que
+   se lean como dos controles de la misma barra. */
+.hero-browser__lang{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex: 0 0 auto;
+  height: 30px;
+  padding: 0 10px;
+  border-radius: 8px;
+  border: 1px solid var(--hero-border);
+  background: rgba(255,255,255,0.03);
+  color: var(--hero-text-dim);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.hero-browser__lang svg{ width: 15px; height: 15px; flex: 0 0 auto; }
+
+.hero-browser__lang-code{
+  font-family: 'General Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+
+.hero-browser__lang:hover,
+.hero-browser__lang:focus-visible{
+  background: rgba(255,255,255,0.09);
+  border-color: rgba(255,255,255,0.22);
+  color: var(--hero-text);
+}
+
+.hero-browser__lang:focus-visible{
+  outline: 2px solid rgba(255,255,255,0.5);
+  outline-offset: 2px;
+}
+
 .hero-browser__tabs-toggle{
   display: flex;
   align-items: center;
@@ -509,7 +547,9 @@
   .hero-browser__controls span{ width: 8px; height: 8px; }
   .hero-browser__tabs{ gap: 5px; }
   .hero-browser__tab{ width: 24px; height: 24px; font-size: 10px; border-radius: 6px; }
-  .hero-browser__address-pill{ height: 26px; padding: 0 10px; max-width: 140px; }
+  .hero-browser__lang{ padding: 0 7px; }
+  .hero-browser__lang-code{ display: none; }
+  .hero-browser__address-pill{ height: 26px; padding: 0 10px; max-width: 120px; }
   .hero-browser__address-pill span{ font-size: 11px; }
   .hero-copy__subtitle{ margin-top: 12px; }
 
