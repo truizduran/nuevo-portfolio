@@ -305,6 +305,59 @@
     .project__frame{ padding: 22px; border-radius: 36px; }
   }
 
+  /* ===== Móvil =====
+     El apilado sticky depende de que la tarjeta entre en la pantalla, y en
+     un teléfono no entra: quedaban dos columnas de ~160px y el texto sin
+     leerse. Acá las tarjetas vuelven al flujo normal, crecen lo que
+     necesiten y la galería pasa a una sola columna. */
+  @media (max-width: 760px){
+    .project{
+      position: static;
+      max-height: none;
+      margin-bottom: 24px;
+    }
+
+    .project__frame{ max-height: none; }
+
+    .project__gallery{
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+
+    /* La foto principal es la portada, así que va arriba de todo. */
+    .project__img--main{
+      order: -1;
+      height: auto;
+      aspect-ratio: 16 / 10;
+    }
+
+    .project__col{ gap: 14px; }
+
+    .project__img--top,
+    .project__col:has(.project__note) .project__img--top{
+      flex: none;
+      aspect-ratio: 16 / 9;
+    }
+
+    /* Sin scroll interno: el texto se lee entero y scrollea la página. */
+    .project__note{
+      flex: none;
+      overflow: visible;
+      max-height: none;
+      border-radius: 22px;
+      padding: 20px 22px;
+    }
+
+    .project__note p{ font-size: 13.5px; line-height: 1.6; }
+
+    .project__top{ gap: 14px; flex-wrap: wrap; }
+    .project__index{ font-size: 38px; }
+    .project__badge{ font-size: 10px; padding: 8px 16px; }
+
+    .projects{ padding-bottom: 80px; }
+    .end-spacer{ height: 0; }
+  }
+
   .end-spacer{ height: 40vh; }
 </style>
 
@@ -860,7 +913,20 @@
           </nav>
         </aside>
 
-      <form class="contact-form" id="contact-form" novalidate>
+      <!--
+        Netlify detecta el formulario al desplegar leyendo este HTML, por eso
+        los atributos tienen que estar acá y no agregarse por JavaScript.
+        - data-netlify: activa la detección.
+        - form-name oculto: obligatorio cuando el envío se hace por fetch.
+        - bot-field: trampa para bots. Un humano no la ve; si viene con algo,
+          Netlify descarta el mensaje.
+      -->
+      <form class="contact-form" id="contact-form" name="contacto" method="POST"
+            data-netlify="true" netlify-honeypot="bot-field" novalidate>
+        <input type="hidden" name="form-name" value="contacto">
+        <p class="visually-hidden" aria-hidden="true">
+          <label>No completar este campo: <input name="bot-field" tabindex="-1" autocomplete="off"></label>
+        </p>
         <div class="field field-row">
           <div>
             <label class="visually-hidden" for="cf-nombre">Nombre</label>
@@ -1048,17 +1114,12 @@
 
   <script>
     // ===== Formulario de contacto =====
-    // Una página estática no puede mandar mails por sí sola: necesita un
-    // servicio que reciba el POST. Hay dos modos:
+    // El envío lo recibe Netlify Forms: se hace un POST a la propia página
+    // con el cuerpo codificado como formulario y el campo form-name incluido.
+    // Los mensajes quedan en el panel de Netlify, en Forms > contacto.
     //
-    //   FORM_ENDPOINT vacío  -> el botón abre tu cliente de correo con el
-    //                           mensaje ya redactado (funciona sin registrarse,
-    //                           pero depende de que el visitante tenga un
-    //                           cliente de mail configurado).
-    //   FORM_ENDPOINT con URL -> se envía en segundo plano y el visitante ve
-    //                           un aviso de "enviado" sin salir de la página.
-    //                           Pegá acá la URL que te da Formspree o Web3Forms.
-    const FORM_ENDPOINT = '';
+    // Ojo: esto solo funciona en el sitio publicado en Netlify. Abriendo el
+    // index.html local el POST falla, y ahí se muestra el aviso con tu email.
     const CONTACT_EMAIL = 'truizd.dev@gmail.com';
 
     const form = document.getElementById('contact-form');
@@ -1080,24 +1141,14 @@
       });
     });
 
-    function enviarPorCorreo(datos) {
-      const cuerpo = 'Nombre: ' + datos.nombre + String.fromCharCode(10) +
-                     'Email: ' + datos.email + String.fromCharCode(10, 10) +
-                     datos.mensaje;
-      window.location.href = 'mailto:' + CONTACT_EMAIL +
-        '?subject=' + encodeURIComponent(datos.asunto) +
-        '&body=' + encodeURIComponent(cuerpo);
-      decir('Se abrió tu cliente de correo con el mensaje listo para enviar.', 'ok');
-    }
-
-    async function enviarAlServicio(datos) {
+    async function enviar() {
       submitBtn.disabled = true;
       decir('Enviando...');
       try {
-        const res = await fetch(FORM_ENDPOINT, {
+        const res = await fetch('/', {
           method: 'POST',
-          headers: { 'Accept': 'application/json' },
-          body: new FormData(form)
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(new FormData(form)).toString()
         });
         if (!res.ok) throw new Error('respuesta ' + res.status);
         form.reset();
@@ -1128,15 +1179,7 @@
         return;
       }
 
-      const datos = {
-        nombre: form.nombre.value.trim(),
-        email: form.email.value.trim(),
-        asunto: form.asunto.value.trim(),
-        mensaje: form.mensaje.value.trim()
-      };
-
-      if (FORM_ENDPOINT) enviarAlServicio(datos);
-      else enviarPorCorreo(datos);
+      enviar();
     });
   </script>
 
