@@ -13,3 +13,6 @@ Thumbs.db
 
 # Configuración local del editor.
 .vscode/
+
+# Caché de herramientas locales, no forma parte del sitio.
+.atl/
