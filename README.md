@@ -4,11 +4,10 @@ Sitio personal de una sola página, usado como portfolio para mostrar mis proyec
 
 🔗 **Demo en vivo:** https://tomasruizduran.netlify.app/
 
-![Captura del sitio](./assets/screenshot.png)
 
 ## Sobre el proyecto
 
-Portfolio personal construido desde cero, con estética estilo Apple: diseño limpio, tipografía grande, materiales translúcidos y animaciones físicas. Pensado para ir sumando proyectos nuevos fácilmente a medida que los voy terminando.
+Portfolio personal construido desde cero. Pensado para ir sumando proyectos nuevos fácilmente a medida que los voy terminando.
 
 ## Secciones
 
@@ -31,17 +30,18 @@ Portfolio personal construido desde cero, con estética estilo Apple: diseño li
 
 ```
 ├── index.html
-├── css/
-├── js/
-└── assets/
+├── hero.css
+├── hero.js
+├── assets/
+├── _headers
+└── .gitignore
 ```
-<!-- Ajustá esto a los nombres reales de tus carpetas si no coinciden. -->
 
 ## Cómo correrlo localmente
 
 1. Cloná el repositorio:
    ```bash
-   git clone https://github.com/truizduran/TU-REPO.git
+   git clone https://github.com/truizduran/nuevo-portfolio.git
    ```
 2. Abrí `index.html` en tu navegador. No necesita instalación ni servidor.
 
